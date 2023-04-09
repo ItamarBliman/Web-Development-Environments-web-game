@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<!-- Spaceships Game HTML5 document. -->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Spaceships Game</title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css" />
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css">
+
+    <link href="//fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet">
+
+    <script src="js/spaceships.js" type="text/javascript"></script>
+    <script src="js/signUp.js" type="text/javascript"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"
+        type="text/javascript"></script>
+</head>
+
+<body>
+    <menu id="menu">
+        <li><a onclick="switchScreen('welcome')">Welcome</a></li>
+        <li><a onclick="switchScreen('signUp')">Sign Up</a></li>
+        <li><a onclick="switchScreen('login')">Log In</a></li>
+        <li class="right"><a onclick="switchScreen('about')">About</a></li>
+    </menu>
+    <content>
+        <div id="welcome" class="welcome">
+            <h1>Welcome to Spaceships Game</h1>
+            <img src="https://i.ytimg.com/vi/I3eHzai-lWA/maxresdefault.jpg" width="25%" height="25%">
+            <p>Made with <span>❤</span> by<br>
+                Daniel Samira - 316164417<br>
+                Itamar Bliman - 312235765
+            </p>
+            <button class="log" onclick="switchScreen('login')">Login</button>
+            <button class="reg" onclick="switchScreen('signUp')">Sign up</button>
+        </div>
+        <div id="signUp">
+            <h1>Sign Up</h1>
+            <div class="container">
+
+                <form class="well form-horizontal" action=" " method="post" id="contact_form">
+                    <fieldset>
+
+                        <!-- Form Name -->
+                        <legend>
+                            <h2><b>Registration Form</b></h2>
+                        </legend><br>
+
+                        <!-- Text input-->
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Username</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input name="user_name" placeholder="Username" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Password</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input name="user_password" placeholder="Password" class="form-control"
+                                        type="password">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Confirm Password</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input name="confirm_password" placeholder="Confirm Password" class="form-control"
+                                        type="password">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">First Name</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input name="first_name" placeholder="First Name" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Last Name</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input name="last_name" placeholder="Last Name" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">E-Mail</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                    <input name="email" placeholder="E-Mail Address" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Birthday</label>
+                            <div class="col-md-4 selectContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <!-- <select name="department" class="form-control selectpicker">
+                                        <option value="">Select your Department/Office</option>
+                                        <option>Department of Engineering</option>
+                                        <option>Department of Agriculture</option>
+                                        <option>Accounting Office</option>
+                                        <option>Tresurer's Office</option>
+                                        <option>MPDC</option>
+                                        <option>MCTC</option>
+                                        <option>MCR</option>
+                                        <option>Mayor's Office</option>
+                                        <option>Tourism Office</option> -->
+                                    <input type="date" id="birthday" name="birthday">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Select Basic -->
+
+                        <!-- Success message -->
+                        <div class="alert alert-success" role="alert" id="success_message">Success <i
+                                class="glyphicon glyphicon-thumbs-up"></i> Success!.</div>
+
+                        <!-- Button -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label"></label>
+                            <div class="col-md-4"><br>
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                <button type="submit"
+                                    class="btn btn-warning">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSUBMIT
+                                    <span class="glyphicon glyphicon-send">
+                                    </span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                </button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div><!-- /.container -->
+        </div>
+        <div id="login">
+            <h1>Login</h1>
+            <div class="login-form">
+                <h6>Sign In</h6>
+
+                <form action="">
+                    <div class="textbox">
+                        <input type="text" placeholder="Username">
+                        <span class="check-message hidden">Required</span>
+                    </div>
+
+                    <div class="textbox">
+                        <input type="password" placeholder="Password">
+                        <span class="check-message hidden">Required</span>
+                    </div>
+
+                    <input type="submit" value="Log In Now" class="login-btn" disabled>
+                </form>
+
+                <div class="dont-have-account">
+                    Don't have an Spaceships Game account?
+                    <a onclick="switchScreen('signUp')">Sign Up</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="about">
+            <h1>About</h1>
+        </div>
+        <div id="configuration">
+            <h1>Configuration</h1>
+        </div>
+        <div id="game">
+            <h1>Spaceships Game</h1>
+            <canvas id="theCanvas" width="480" height="600"></canvas>
+        </div>
+
+    </content>
+
+    <script type="text/javascript" language="JavaScript">
+        function switchScreen(p) {
+            $('#welcome').toggle(p === 'welcome');
+            $('#signUp').toggle(p === 'signUp');
+            $('#login').toggle(p === 'login');
+            $('#about').toggle(p === 'about');
+            $('#configuration').toggle(p === 'configuration');
+            $('#game').toggle(p === 'game');
+        }
+
+        $(".textbox input").focusout(function () {
+            if ($(this).val() == "") {
+                $(this).siblings().removeClass("hidden");
+                $(this).css("background", "#554343");
+            } else {
+                $(this).siblings().addClass("hidden");
+                $(this).css("background", "#484848");
+            }
+        });
+
+        $(".textbox input").keyup(function () {
+            var inputs = $(".textbox input");
+            if (inputs[0].value != "" && inputs[1].value) {
+                $(".login-btn").attr("disabled", false);
+                $(".login-btn").addClass("active");
+            } else {
+                $(".login-btn").attr("disabled", true);
+                $(".login-btn").removeClass("active");
+            }
+        });
+
+    </script>
+
+    <!-- <audio id="blockerSound" preload="auto">
+        <source src="blocker_hit.ogg" type="audio/ogg">
+    </audio>
+    <audio id="targetSound" preload="auto">
+        <source src="target_hit.ogg" type="audio/ogg">
+    </audio>
+    <audio id="cannonSound" preload="auto">
+        <source src="cannon_fire.ogg" type="audio/ogg">
+    </audio>
+    <p>
+        <input id="startButton" type="button" value="Start Game">
+    </p> -->
+</body>
+
+</html>
