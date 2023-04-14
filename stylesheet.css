@@ -21,11 +21,11 @@ body {
 #login,
 #about,
 #configuration,
-#game {
+#welcome {
 	display: none;
 }
 
-#welcome {
+#game {
 	display: block;
 }
 
