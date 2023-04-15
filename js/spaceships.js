@@ -6,9 +6,11 @@ var context; // used for drawing on the canvas
 var TARGET_ROWS = 4; // sections in the target
 var TARGET_COLUMNS = 5; // sections in the target
 var TARGET_PIECES = TARGET_ROWS * TARGET_COLUMNS; // sections in the target
-var HIT_REWARD = 3; // seconds added on a hit
 var TIME_INTERVAL = 25; // screen refresh interval in milliseconds
 var interval = TIME_INTERVAL / 1000.0;
+var Strikes; // number of strikes
+var points = 5; // number of points
+var score; // number of points
 
 // variables for the game loop and tracking statistics
 var intervalTimer; // holds interval timer
@@ -24,12 +26,16 @@ var targetEndY; // target bottom's distance from top
 var pieceLength; // length of a target piece
 var pieceWidth; // width of a target piece
 var targetVelocity; // target speed multiplier during game
+var heroVelocity; // hero speed multiplier during game
+var defaultSpeed = 200; // default speed multiplier
+var maxTimesVelocity; // maximum number of times to increase velocity
+var velocityIncrement = 40; // amount to increase velocity each time
 
 var hitStates; // is each target piece hit?
 var targetPiecesHit; // number of target pieces hit (out of 20)
 
 // variables for the shot
-var shotVelocity; // shot's velocity
+var heroShotVelocity; // shot's velocity
 var shotOnScreen; // is the cannonball on the screen
 var canvasWidth; // width of the canvas
 var canvasHeight; // height of the canvas
@@ -37,6 +43,7 @@ var canvasHeight; // height of the canvas
 // variables for sounds
 var targetSound;
 var shotSound;
+var heroSound;
 
 var users;
 
@@ -48,6 +55,7 @@ var shotImage;
 var hero;
 var shot;
 var enemyShots;
+var enemyShotVelocity;
 
 // called when the app first launches
 function setupGame() {
@@ -81,17 +89,24 @@ function setupGame() {
    heroImage.src = "images/hero.png";
 
    // Enemy image
-   enemyImage = new Image();
-   enemyImage.src = "images/enemy.png";
+   enemys = [];
+   for (var i = 0; i < 4; i++) {
+      enemys[i] = new Image();
+      enemys[i].src = `images/enemy${i}.png`;
+   }
 
    // Shot image
    shotImage = new Image();
-   shotImage.src = "images/shot.jpg";
+   shotImage.src = "images/shot.png";
+
+   // Enemy Shot image
+   enemyShotImage = new Image();
+   enemyShotImage.src = "images/enemyshot.png";
 
    // Game objects
-   hero = { speed: 256 }; // movement in pixels per second
-   shot = { speed: 256 }; // movement in pixels per second
-   target.speed = 256; // movement in pixels per second
+   hero = { speed: defaultSpeed }; // movement in pixels per second
+   shot = { speed: defaultSpeed }; // movement in pixels per second
+   target.speed = defaultSpeed; // movement in pixels per second
 
    // Handle keyboard controls
    keysDown = {};
@@ -107,6 +122,7 @@ function setupGame() {
 
    // get sounds
    targetSound = document.getElementById("targetSound");
+   heroSound = document.getElementById("heroSound");
    shotSound = document.getElementById("shotSound");
 } // end function setupGame
 
@@ -126,12 +142,12 @@ function stopTimer() {
 // relative to the size of the canvas before the game begins
 function resetElements() {
 
-   shotImageRadius = shotImage.height / 2; 
-   shotSpeed = canvasWidth * 3 / 2; 
+   shotImageRadius = 32 // shotImage.height / 2;
+   shotSpeed = canvasWidth * 3 / 2;
 
    // configure instance variables related to the target
-   targetBeginningX = canvasWidth * 1 / 4; // target 7/8 canvas width from left
-   targetEndX = canvasWidth * 3 / 4; // target 7/8 canvas width from left
+   targetBeginningX = canvasWidth * 1 / 5; // target 7/8 canvas width from left
+   targetEndX = canvasWidth * 4 / 5; // target 7/8 canvas width from left
    targetBeginningY = canvasHeight / 8; // distance from top 1/8 canvas height
    targetEndY = canvasHeight * 1 / 2; // distance from top 7/8 canvas height
    pieceLength = (targetEndY - targetBeginningY) / TARGET_ROWS;
@@ -142,7 +158,6 @@ function resetElements() {
    target.end.y = targetEndY;
    hero.x = canvasWidth / 2;
    hero.y = canvasHeight - heroImage.height * 2;
-   enemyShots = [];
 
 
 
@@ -160,10 +175,18 @@ function newGame() {
 
    targetPiecesHit = 0; // no target pieces have been hit
    targetVelocity = target.speed; // set initial velocity
+   veloctiyIncrementLevel = 0; // velocity has not been increased
    timeLeft = 120; // start the countdown at 120 seconds
    timerCount = 0; // the timer has fired 0 times so far
    shotOnScreen = false; // the shot is not on the screen
+   enemyShots = []; // the enemy has not fired any shots
    timeElapsed = 0; // set the time elapsed to zero
+   Strikes = 3; // number of strikes before game over
+   score = 0; // set the score to zero
+   maxTimesVelocity = 4; // maximum number of times velocity can be increased
+   heroShotVelocity = shot.speed; // set initial velocity
+   enemyShotVelocity = shot.speed; // set initial velocity
+   heroVelocity = hero.speed; // set initial velocity
 
    startTimer(); // starts the game loop
 } // end function newGame
@@ -173,19 +196,19 @@ function updatePositions() {
 
    if ((38 in keysDown)) { // Player holding up
       if (hero.y > canvasHeight * 0.6)
-         hero.y -= hero.speed * interval;
+         hero.y -= heroVelocity * interval;
    }
    if ((40 in keysDown)) { // Player holding down
       if (hero.y < canvasHeight - heroImage.height)
-         hero.y += hero.speed * interval;
+         hero.y += heroVelocity * interval;
    }
    if (37 in keysDown) { // Player holding left
       if (hero.x > heroImage.width)
-         hero.x -= hero.speed * interval;
+         hero.x -= heroVelocity * interval;
    }
    if (39 in keysDown) { // Player holding right
       if (hero.x < canvasWidth - heroImage.width)
-         hero.x += hero.speed * interval;
+         hero.x += heroVelocity * interval;
    }
 
 
@@ -201,7 +224,7 @@ function updatePositions() {
    if (shotOnScreen) // if there is currently a shot fired
    {
       // update shot position
-      shot.y -= interval * shotVelocity;
+      shot.y -= interval * heroShotVelocity;
 
       // check for collisions with top walls
       if (shot.y <= 0) {
@@ -209,7 +232,7 @@ function updatePositions() {
       } // end else if
 
       // check for shot collision with target
-      else if (shotVelocity > 0 &&
+      else if (heroShotVelocity > 0 &&
          shot.y + shotImageRadius >= target.start.y &&
          shot.y - shotImageRadius <= target.end.y &&
          shot.x + shotImageRadius >= target.start.x &&
@@ -223,20 +246,51 @@ function updatePositions() {
          // check whether the piece hasn't been hit yet
          if ((sectionX >= 0 && sectionX < TARGET_COLUMNS) && (sectionY >= 0 && sectionY < TARGET_ROWS) &&
             !hitStates[sectionY][sectionX]) {
-            targetSound.play(); // play target hit sound
+            heroSound.play(); // play target hit sound
             hitStates[sectionY][sectionX] = true; // section was hit
             shotOnScreen = false; // remove shot
-            timeLeft += HIT_REWARD; // add reward to remaining time
+
+            score += (TARGET_ROWS - sectionY) * points;
 
             // if all pieces have been hit
             if (++targetPiecesHit == TARGET_PIECES) {
                stopTimer(); // game over so stop the interval timer
                draw(); // draw the game pieces one final time
-               showGameOverDialog("You Won!"); // show winning dialog
+               alert("Champion!");
+
             } // end if
          } // end if
       } // end else if
    } // end if
+
+   // update enemy shots position
+   if (enemyShots.length > 0) {
+      if (enemyShots[0].y > canvasHeight) //check for collisions with bottom walls
+         enemyShots.shift();
+
+      for (var i = 0; i < enemyShots.length; i++) {
+         enemyShots[i].y += interval * enemyShotVelocity;
+
+         // check for enemy shot collision witßh hero
+         if (
+
+            Math.abs(enemyShots[i].y - hero.y) <= shotImageRadius &&
+            Math.abs(enemyShots[i].x - hero.x) <= shotImageRadius) {
+
+            targetSound.play(); // play target hit sound
+            Strikes--;
+            if (Strikes == 0) {
+               stopTimer(); // game over so stop the interval timer
+               alert("You Lost!");
+            }
+            hero.x = canvasWidth / 2;
+            hero.y = canvasHeight - heroImage.height * 2;
+            enemyShots = [];
+            shotOnScreen = false;
+
+         }
+      }
+   }
 
    ++timerCount; // increment the timer event counter
 
@@ -245,7 +299,19 @@ function updatePositions() {
       --timeLeft; // decrement the timer
       ++timeElapsed; // increment the time elapsed
       timerCount = 0; // reset the count
-   } // end if
+      if (timeElapsed % 5 == 0 && 0 < maxTimesVelocity) {
+         if (targetVelocity < 0)
+            targetVelocity -= velocityIncrement;
+         else
+            targetVelocity += velocityIncrement;
+
+         heroShotVelocity += velocityIncrement;
+         enemyShotVelocity += velocityIncrement;
+         heroVelocity += velocityIncrement;
+         maxTimesVelocity--;
+      } // end if
+   }
+
 
    shootingEnemy();
 
@@ -254,16 +320,43 @@ function updatePositions() {
    // if the timer reached zero
    if (timeLeft <= 0) {
       stopTimer();
+      if (score < 100)
+         alert("you can do better, you only got " + score + " points");
+      else
+         alert("Winner!!");
+
       showGameOverDialog("You lost"); // show the losing dialog
    } // end if
 } // end function updatePositions
 
-function shootingEnemy(){
-   if ((enemyShots.size() >= 2) || (enemyShots.size() == 1 && enemyShots.peek().y < canvasHeight * 3/4 ))
+function shootingEnemy() {
+   let oneShot = new Object();
+   if ((enemyShots.length >= 2) || (enemyShots.length == 1 && enemyShots[0].y < canvasHeight * 3 / 4))
       return;
    let randomRow = Math.floor(Math.random() * (TARGET_ROWS - 1));
    let randomCol = Math.floor(Math.random() * (TARGET_COLUMNS - 1));
-   for (randomRow, )
+   for (let i = randomRow; i < TARGET_ROWS && !oneShot.x; i++) {
+      for (let j = randomCol; j < TARGET_COLUMNS; j++) {
+         if (hitStates[i][j] == false) {
+            oneShot.x = target.start.x + j * pieceWidth + pieceWidth / 2;
+            oneShot.y = target.start.y + i * pieceLength + pieceLength / 2;
+            break;
+         }
+      }
+   }
+   if (!oneShot.x) {
+      for (let i = 0; i < randomRow && !oneShot.x; i++) {
+         for (let j = 0; j < randomCol; j++) {
+            if (hitStates[i][j] == false) {
+               oneShot.x = target.start.x + j * pieceWidth + pieceWidth / 2;
+               oneShot.y = target.start.y + i * pieceLength + pieceLength / 2;
+               break;
+            }
+         }
+      }
+   }
+   if (oneShot.x)
+      enemyShots.push(oneShot);
 
 }
 
@@ -279,7 +372,6 @@ function fireShot(event) {
 
 
    // get the y component of the total velocity
-   shotVelocity = shot.speed;
    shotOnScreen = true; // the shot is on the screen
 
    // play shot fired sound
@@ -295,12 +387,19 @@ function draw() {
    context.fillStyle = "black";
    context.font = "bold 24px serif";
    context.textBaseline = "top";
-   context.fillText("Time remaining: " + timeLeft, 5, 5);
+   context.fillText("Time remaining: " + timeLeft + " sec     Strikes remaining: " + Strikes + "     Score: " + score, 5, 5);
+
+
 
    // if a shot is currently on the screen, draw it
    if (shotOnScreen) {
-      context.drawImage(heroImage, shot.x, shot.y); // draw the shot
+      context.drawImage(shotImage, shot.x, shot.y); // draw the shot
    } // end if
+
+   // draw the enemy shots
+   for (let i = 0; i < enemyShots.length; i++) {
+      context.drawImage(enemyShotImage, enemyShots[i].x, enemyShots[i].y);
+   }
 
    context.drawImage(heroImage, hero.x, hero.y); // draw the hero
 
@@ -313,7 +412,7 @@ function draw() {
       currentPoint.x = target.start.x;
       for (var j = 0; j < TARGET_COLUMNS; ++j) {
          if (!hitStates[i][j]) {
-            context.drawImage(enemyImage, currentPoint.x, currentPoint.y);
+            context.drawImage(enemys[i], currentPoint.x, currentPoint.y);
          }
          currentPoint.x += pieceWidth;
       }
@@ -321,11 +420,5 @@ function draw() {
       currentPoint.y += pieceLength;
    } // end for
 } // end function draw
-
-// display an alert when the game ends
-function showGameOverDialog(message) {
-   alert(message +
-      "\nTotal time: " + timeElapsed + " seconds ");
-} // end function showGameOverDialog
 
 window.addEventListener("load", setupGame, false);

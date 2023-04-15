@@ -209,7 +209,7 @@
         </div>
         <div id="game">
             <h1>Spaceships Game</h1>
-            <canvas id="theCanvas" width="480" height="600"></canvas>
+            <canvas id="theCanvas" width="1200" height="600"></canvas>
             <p><input id = "startButton" type = "button" value = "Start Game">
             </p>
         </div>
@@ -249,8 +249,11 @@
 
     </script>
 
+    <audio id="heroSound" preload="auto">
+        <source src="sounds/ice_hit.mp3" type="audio/mp3">
+    </audio>
     <audio id="targetSound" preload="auto">
-        <source src="sounds/target_hit.ogg" type="audio/ogg">
+        <source src="sounds/fire_hit.mp3" type="audio/mp3">
     </audio>
     <audio id="shotSound" preload="auto">
         <source src="sounds/cannon_fire.ogg" type="audio/ogg">
