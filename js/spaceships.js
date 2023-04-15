@@ -1,50 +1,42 @@
-// Fig. 14.27 cannon.js
-// Logic of the Cannon Game
+
 var canvas; // the canvas
 var context; // used for drawing on the canvas
 
 // constants for game play
 var TARGET_ROWS = 4; // sections in the target
 var TARGET_COLUMNS = 5; // sections in the target
-// var TARGET_PIECES = 7; // sections in the target
-var MISS_PENALTY = 2; // seconds deducted on a miss
+var TARGET_PIECES = TARGET_ROWS * TARGET_COLUMNS; // sections in the target
 var HIT_REWARD = 3; // seconds added on a hit
 var TIME_INTERVAL = 25; // screen refresh interval in milliseconds
+var interval = TIME_INTERVAL / 1000.0;
 
 // variables for the game loop and tracking statistics
 var intervalTimer; // holds interval timer
 var timerCount; // number of times the timer fired since the last second
 var timeLeft; // the amount of time left in seconds
-var shotsFired; // the number of shots the user has fired
 var timeElapsed; // the number of seconds elapsed
 
 var target; // start and end points of the target
-var targetDistance; // target distance from left
-var targetBeginning; // target distance from top
-var targetEnd; // target bottom's distance from top
+var targetBeginningX; // target distance from left
+var targetEndX; // target distance from left
+var targetBeginningY; // target distance from top
+var targetEndY; // target bottom's distance from top
 var pieceLength; // length of a target piece
-var initialTargetVelocity; // initial target speed multiplier
+var pieceWidth; // width of a target piece
 var targetVelocity; // target speed multiplier during game
 
-var lineWidth; // width of the target and blocker
 var hitStates; // is each target piece hit?
-var targetPiecesHit; // number of target pieces hit (out of 7)
+var targetPiecesHit; // number of target pieces hit (out of 20)
 
-// variables for the cannon and cannonball
-var cannonball; // cannonball image's upper-left corner
-var cannonballVelocity; // cannonball's velocity
-var cannonballOnScreen; // is the cannonball on the screen
-var cannonballRadius; // cannonball radius
-var cannonballSpeed; // cannonball speed
-var cannonBaseRadius; // cannon base radius
-var cannonLength; // cannon barrel length
-var barrelEnd; // the end point of the cannon's barrel
+// variables for the shot
+var shotVelocity; // shot's velocity
+var shotOnScreen; // is the cannonball on the screen
 var canvasWidth; // width of the canvas
 var canvasHeight; // height of the canvas
 
 // variables for sounds
 var targetSound;
-var cannonSound;
+var shotSound;
 
 var users;
 
@@ -55,11 +47,11 @@ var enemyImage;
 var shotImage;
 var hero;
 var shot;
-// var enemy;
+var enemyShots;
 
 // called when the app first launches
 function setupGame() {
-   users = { "p": "testuser" }
+   users = { "p": "testuser" };
 
    // stop timer if document unload event occurs
    document.addEventListener("unload", stopTimer, false);
@@ -76,36 +68,33 @@ function setupGame() {
    target = new Object(); // object representing target line
    target.start = new Object(); // will hold x-y coords of line start
    target.end = new Object(); // will hold x-y coords of line end
-   cannonball = new Object(); // object representing cannonball point
-   barrelEnd = new Object(); // object representing end of cannon barrel
+
+   canvasWidth = canvas.width; // store the width
+   canvasHeight = canvas.height; // store the height
 
    // Background image
-
    bgImage = new Image();
    bgImage.src = "images/background.png";
 
-
    // Hero image
-
    heroImage = new Image();
    heroImage.src = "images/hero.png";
 
    // Enemy image
-
    enemyImage = new Image();
    enemyImage.src = "images/enemy.png";
 
+   // Shot image
    shotImage = new Image();
    shotImage.src = "images/shot.jpg";
 
    // Game objects
    hero = { speed: 256 }; // movement in pixels per second
-   // enemy = {};
-   // monstersCaught = 0;
+   shot = { speed: 256 }; // movement in pixels per second
+   target.speed = 256; // movement in pixels per second
 
    // Handle keyboard controls
    keysDown = {};
-
    // Check for keys pressed where key represents the keycode captured
    addEventListener("keydown", function (e) { keysDown[e.keyCode] = true; }, false);
 
@@ -118,50 +107,45 @@ function setupGame() {
 
    // get sounds
    targetSound = document.getElementById("targetSound");
-   cannonSound = document.getElementById("cannonSound");
+   shotSound = document.getElementById("shotSound");
 } // end function setupGame
 
 // set up interval timer to update game
 function startTimer() {
-   canvas.addEventListener("click", fireCannonball, false);
+   canvas.addEventListener("click", fireShot, false);
    intervalTimer = window.setInterval(updatePositions, TIME_INTERVAL);
 } // end function startTimer
 
 // terminate interval timer
 function stopTimer() {
-   canvas.removeEventListener("click", fireCannonball, false);
+   canvas.removeEventListener("click", fireShot, false);
    window.clearInterval(intervalTimer);
 } // end function stopTimer
 
 // called by function newGame to scale the size of the game elements
 // relative to the size of the canvas before the game begins
 function resetElements() {
-   var w = canvas.width;
-   var h = canvas.height;
-   canvasWidth = w; // store the width
-   canvasHeight = h; // store the height
-   cannonBaseRadius = h / 18; // cannon base radius 1/18 canvas height
-   cannonLength = w / 8; // cannon length 1/8 canvas width
 
-   cannonballRadius = w / 36; // cannonball radius 1/36 canvas width
-   cannonballSpeed = w * 3 / 2; // cannonball speed multiplier
-
-   lineWidth = w / 24; // target and blocker 1/24 canvas width
+   shotImageRadius = shotImage.height / 2; 
+   shotSpeed = canvasWidth * 3 / 2; 
 
    // configure instance variables related to the target
-   targetDistance = w * 7 / 8; // target 7/8 canvas width from left
-   targetBeginning = h / 8; // distance from top 1/8 canvas height
-   targetEnd = h * 7 / 8; // distance from top 7/8 canvas height
-   pieceLength = (targetEnd - targetBeginning) / TARGET_PIECES;
-   initialTargetVelocity = -h / 4; // initial target speed multiplier
-   target.start.x = targetDistance;
-   target.start.y = targetBeginning;
-   target.end.x = targetDistance;
-   target.end.y = targetEnd;
+   targetBeginningX = canvasWidth * 1 / 4; // target 7/8 canvas width from left
+   targetEndX = canvasWidth * 3 / 4; // target 7/8 canvas width from left
+   targetBeginningY = canvasHeight / 8; // distance from top 1/8 canvas height
+   targetEndY = canvasHeight * 1 / 2; // distance from top 7/8 canvas height
+   pieceLength = (targetEndY - targetBeginningY) / TARGET_ROWS;
+   pieceWidth = (targetEndX - targetBeginningX) / TARGET_COLUMNS;
+   target.start.x = targetBeginningX;
+   target.start.y = targetBeginningY;
+   target.end.x = targetEndX;
+   target.end.y = targetEndY;
+   hero.x = canvasWidth / 2;
+   hero.y = canvasHeight - heroImage.height * 2;
+   enemyShots = [];
 
-   // end point of the cannon's barrel initially points horizontally
-   barrelEnd.x = cannonLength;
-   barrelEnd.y = h / 2;
+
+
 } // end function resetElements
 
 // reset all the screen elements and start a new game
@@ -175,11 +159,10 @@ function newGame() {
          hitStates[i][j] = false; // target piece not destroyed
 
    targetPiecesHit = 0; // no target pieces have been hit
-   targetVelocity = initialTargetVelocity; // set initial velocity
-   timeLeft = 10; // start the countdown at 10 seconds
+   targetVelocity = target.speed; // set initial velocity
+   timeLeft = 120; // start the countdown at 120 seconds
    timerCount = 0; // the timer has fired 0 times so far
-   cannonballOnScreen = false; // the cannonball is not on the screen
-   shotsFired = 0; // set the initial number of shots fired
+   shotOnScreen = false; // the shot is not on the screen
    timeElapsed = 0; // set the time elapsed to zero
 
    startTimer(); // starts the game loop
@@ -187,6 +170,25 @@ function newGame() {
 
 // called every TIME_INTERVAL milliseconds
 function updatePositions() {
+
+   if ((38 in keysDown)) { // Player holding up
+      if (hero.y > canvasHeight * 0.6)
+         hero.y -= hero.speed * interval;
+   }
+   if ((40 in keysDown)) { // Player holding down
+      if (hero.y < canvasHeight - heroImage.height)
+         hero.y += hero.speed * interval;
+   }
+   if (37 in keysDown) { // Player holding left
+      if (hero.x > heroImage.width)
+         hero.x -= hero.speed * interval;
+   }
+   if (39 in keysDown) { // Player holding right
+      if (hero.x < canvasWidth - heroImage.width)
+         hero.x += hero.speed * interval;
+   }
+
+
    // update the target's position
    var targetUpdate = TIME_INTERVAL / 1000.0 * targetVelocity;
    target.start.x += targetUpdate;
@@ -196,33 +198,34 @@ function updatePositions() {
    if (target.start.x < 0 || target.end.x > canvasWidth)
       targetVelocity *= -1;
 
-   if (cannonballOnScreen) // if there is currently a shot fired
+   if (shotOnScreen) // if there is currently a shot fired
    {
-      // update cannonball position
-      var interval = TIME_INTERVAL / 1000.0;
+      // update shot position
+      shot.y -= interval * shotVelocity;
 
-      cannonball.y += interval * cannonballVelocityY;
-
-      // check for collisions with top and bottom walls
-      if (cannonball.y + cannonballRadius > canvasHeight) {
-         cannonballOnScreen = false; // make the cannonball disappear
+      // check for collisions with top walls
+      if (shot.y <= 0) {
+         shotOnScreen = false; // make the shot disappear
       } // end else if
-      // check for cannonball collision with target
-      else if (cannonballVelocityY > 0 &&
-         cannonball.x + cannonballRadius >= targetDistance &&
-         cannonball.x + cannonballRadius <= targetDistance + lineWidth &&
-         cannonball.y - cannonballRadius > target.start.y &&
-         cannonball.y + cannonballRadius < target.end.y) {
+
+      // check for shot collision with target
+      else if (shotVelocity > 0 &&
+         shot.y + shotImageRadius >= target.start.y &&
+         shot.y - shotImageRadius <= target.end.y &&
+         shot.x + shotImageRadius >= target.start.x &&
+         shot.x - shotImageRadius <= target.end.x) {
          // determine target section number (0 is the top)
-         var section =
-            Math.floor((cannonball.y - target.start.y) / pieceLength);
+         var sectionX =
+            Math.floor((shot.x - target.start.x) / pieceWidth);
+         var sectionY =
+            Math.floor((shot.y - target.start.y) / pieceLength);
 
          // check whether the piece hasn't been hit yet
-         if ((section >= 0 && section < TARGET_PIECES) &&
-            !hitStates[section]) {
+         if ((sectionX >= 0 && sectionX < TARGET_COLUMNS) && (sectionY >= 0 && sectionY < TARGET_ROWS) &&
+            !hitStates[sectionY][sectionX]) {
             targetSound.play(); // play target hit sound
-            hitStates[section] = true; // section was hit
-            cannonballOnScreen = false; // remove cannonball
+            hitStates[sectionY][sectionX] = true; // section was hit
+            shotOnScreen = false; // remove shot
             timeLeft += HIT_REWARD; // add reward to remaining time
 
             // if all pieces have been hit
@@ -244,6 +247,8 @@ function updatePositions() {
       timerCount = 0; // reset the count
    } // end if
 
+   shootingEnemy();
+
    draw(); // draw all elements at updated positions
 
    // if the timer reached zero
@@ -253,26 +258,33 @@ function updatePositions() {
    } // end if
 } // end function updatePositions
 
-// fires a cannonball
-function fireCannonball(event) {
-   if (cannonballOnScreen) // if a cannonball is already on the screen
+function shootingEnemy(){
+   if ((enemyShots.size() >= 2) || (enemyShots.size() == 1 && enemyShots.peek().y < canvasHeight * 3/4 ))
+      return;
+   let randomRow = Math.floor(Math.random() * (TARGET_ROWS - 1));
+   let randomCol = Math.floor(Math.random() * (TARGET_COLUMNS - 1));
+   for (randomRow, )
+
+}
+
+// fires a shot
+function fireShot(event) {
+
+   if (shotOnScreen) // if a shot is already on the screen
       return; // do nothing
 
-   // move the cannonball to be inside the cannon
-   cannonball.x = hero.x; // align x-coordinate with cannon
-   cannonball.y = hero.y; // centers ball vertically
+   // move the shot to be inside the hero
+   shot.x = hero.x; // align x-coordinate with hero
+   shot.y = hero.y; // centers shot vertically
 
-   // get the x component of the total velocity
-   cannonballVelocityX = 0;
 
    // get the y component of the total velocity
-   cannonballVelocityY = cannonballSpeed;
-   cannonballOnScreen = true; // the cannonball is on the screen
-   ++shotsFired; // increment shotsFired
+   shotVelocity = shot.speed;
+   shotOnScreen = true; // the shot is on the screen
 
-   // play cannon fired sound
-   cannonSound.play();
-} // end function fireCannonball
+   // play shot fired sound
+   shotSound.play();
+} // end function fireShot
 
 
 // draws the game elements to the given Canvas
@@ -285,12 +297,12 @@ function draw() {
    context.textBaseline = "top";
    context.fillText("Time remaining: " + timeLeft, 5, 5);
 
-   // if a cannonball is currently on the screen, draw it
-   if (cannonballOnScreen) {
-      ctx.drawImage(shotImage, shot.x, shot.y); // draw the hero
+   // if a shot is currently on the screen, draw it
+   if (shotOnScreen) {
+      context.drawImage(heroImage, shot.x, shot.y); // draw the shot
    } // end if
 
-   ctx.drawImage(heroImage, hero.x, hero.y); // draw the hero
+   context.drawImage(heroImage, hero.x, hero.y); // draw the hero
 
    // initialize currentPoint to the starting point of the target
    var currentPoint = new Object();
@@ -301,7 +313,7 @@ function draw() {
       currentPoint.x = target.start.x;
       for (var j = 0; j < TARGET_COLUMNS; ++j) {
          if (!hitStates[i][j]) {
-            ctx.drawImage(enemyImage, currentPoint.x, currentPoint.y);
+            context.drawImage(enemyImage, currentPoint.x, currentPoint.y);
          }
          currentPoint.x += pieceWidth;
       }
@@ -312,7 +324,7 @@ function draw() {
 
 // display an alert when the game ends
 function showGameOverDialog(message) {
-   alert(message + "\nShots fired: " + shotsFired +
+   alert(message +
       "\nTotal time: " + timeElapsed + " seconds ");
 } // end function showGameOverDialog
 
