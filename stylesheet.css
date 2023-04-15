@@ -23,15 +23,18 @@ body {
 #configuration,
 #welcome {
 	display: none;
+	text-align: center;
 }
 
 #game {
 	display: block;
+	text-align: center;
 }
 
 #currentImg {
 	font-weight: bold;
 }
+
 
 p {
 	direction: rtl;
@@ -215,6 +218,8 @@ button:hover {
 	width: 470px;
 	background: #202020;
 	padding: 30px 60px;
+
+
 }
 
 .logo {
