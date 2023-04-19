@@ -109,6 +109,35 @@ $(document).ready(function () {
             // Use Ajax to submit form data
             $.post($form.attr('action'), $form.serialize(), function (result) {
                 console.log(result);
+                alert(result.message);
             }, 'json');
         });
 });
+
+function saveInfo(formData){
+    //save the user's information to array
+    var user = formData.get('user_name');
+    var pass = formData.get('user_password');
+    var firstName = formData.get('first_name');
+    var lastName = formData.get('last_name');
+    var email = formData.get('email');
+    var birthday = formData.get('birthday');
+    users.push({user_name: user, user_password: pass, first_name: firstName, last_name: lastName, email: email, birthday: birthday});
+    alert("Sign up successfully! " + users[users.length-1].user_name);
+    switchScreen("login");
+
+}
+
+function logInUser(formData){
+    //check if the user's information is in the array
+    var user = formData.get('userName');
+    var pass = formData.get('passWord');
+    for(var i = 0; i < users.length; i++){
+        if(user == users[i].user_name && pass == users[i].user_password){
+            alert("Log in successfully! \n" + users[i].user_name + " is now logged in.");
+            switchScreen("configuration");
+            return;
+        }
+    }
+    alert("Log in failed! Please check your username and password.");
+}

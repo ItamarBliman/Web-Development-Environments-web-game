@@ -44,8 +44,7 @@ var canvasHeight; // height of the canvas
 var targetSound;
 var shotSound;
 var heroSound;
-
-var users;
+var themeSound;
 
 var keysDown; // Handle keyboard controls
 var bgImage;
@@ -59,7 +58,6 @@ var enemyShotVelocity;
 
 // called when the app first launches
 function setupGame() {
-   users = { "p": "testuser" };
 
    // stop timer if document unload event occurs
    document.addEventListener("unload", stopTimer, false);
@@ -110,10 +108,6 @@ function setupGame() {
 
    // Handle keyboard controls
    keysDown = {};
-   // Check for keys pressed where key represents the keycode captured
-   addEventListener("keydown", function (e) { keysDown[e.keyCode] = true; }, false);
-
-   addEventListener("keyup", function (e) { delete keysDown[e.keyCode]; }, false);
 
    // initialize hitStates as an array
    hitStates = new Array(TARGET_ROWS);
@@ -124,18 +118,28 @@ function setupGame() {
    targetSound = document.getElementById("targetSound");
    heroSound = document.getElementById("heroSound");
    shotSound = document.getElementById("shotSound");
+   themeSound = document.getElementById("themeSound");
+   themeSound.volume = 0.2;
 } // end function setupGame
 
 // set up interval timer to update game
 function startTimer() {
    canvas.addEventListener("click", fireShot, false);
    intervalTimer = window.setInterval(updatePositions, TIME_INTERVAL);
+   // Check for keys pressed where key represents the keycode captured
+   addEventListener("keydown", addkey, false);
+
+   addEventListener("keyup", removekey, false);
 } // end function startTimer
 
 // terminate interval timer
 function stopTimer() {
    canvas.removeEventListener("click", fireShot, false);
    window.clearInterval(intervalTimer);
+   themeSound.pause();
+   themeSound.currentTime = 0;
+   removeEventListener("keydown", addkey, false);
+   removeEventListener("keyup", removekey, false);
 } // end function stopTimer
 
 // called by function newGame to scale the size of the game elements
@@ -148,7 +152,7 @@ function resetElements() {
    // configure instance variables related to the target
    targetBeginningX = canvasWidth * 1 / 5; // target 7/8 canvas width from left
    targetEndX = canvasWidth * 4 / 5; // target 7/8 canvas width from left
-   targetBeginningY = canvasHeight / 8; // distance from top 1/8 canvas height
+   targetBeginningY = canvasHeight / 18; // distance from top 1/8 canvas height
    targetEndY = canvasHeight * 1 / 2; // distance from top 7/8 canvas height
    pieceLength = (targetEndY - targetBeginningY) / TARGET_ROWS;
    pieceWidth = (targetEndX - targetBeginningX) / TARGET_COLUMNS;
@@ -157,7 +161,7 @@ function resetElements() {
    target.end.x = targetEndX;
    target.end.y = targetEndY;
    hero.x = canvasWidth / 2;
-   hero.y = canvasHeight - heroImage.height * 2;
+   hero.y = canvasHeight - heroImage.height;
 
 
 
@@ -189,6 +193,7 @@ function newGame() {
    heroVelocity = hero.speed; // set initial velocity
 
    startTimer(); // starts the game loop
+   themeSound.play(); // play the theme music
 } // end function newGame
 
 // called every TIME_INTERVAL milliseconds
@@ -199,11 +204,11 @@ function updatePositions() {
          hero.y -= heroVelocity * interval;
    }
    if ((40 in keysDown)) { // Player holding down
-      if (hero.y < canvasHeight - heroImage.height)
+      if (hero.y < canvasHeight - 0.8 * heroImage.height)
          hero.y += heroVelocity * interval;
    }
    if (37 in keysDown) { // Player holding left
-      if (hero.x > heroImage.width)
+      if (hero.x > 0)
          hero.x -= heroVelocity * interval;
    }
    if (39 in keysDown) { // Player holding right
@@ -218,7 +223,7 @@ function updatePositions() {
    target.end.x += targetUpdate;
 
    // if the target hit the walls, reverse direction
-   if (target.start.x < 0 || target.end.x > canvasWidth)
+   if (target.start.x < 0 || target.end.x - 30 > canvasWidth)
       targetVelocity *= -1;
 
    if (shotOnScreen) // if there is currently a shot fired
@@ -284,7 +289,7 @@ function updatePositions() {
                alert("You Lost!");
             }
             hero.x = canvasWidth / 2;
-            hero.y = canvasHeight - heroImage.height * 2;
+            hero.y = canvasHeight - heroImage.height;
             enemyShots = [];
             shotOnScreen = false;
 
@@ -387,7 +392,7 @@ function draw() {
    context.fillStyle = "black";
    context.font = "bold 24px serif";
    context.textBaseline = "top";
-   context.fillText("Time remaining: " + timeLeft + " sec     Strikes remaining: " + Strikes + "     Score: " + score, 5, 5);
+   context.fillText("Time remaining: " + timeLeft + " sec     Strikes remaining: " + Strikes + "     Score: " + score, 570, 5);
 
 
 
@@ -412,7 +417,7 @@ function draw() {
       currentPoint.x = target.start.x;
       for (var j = 0; j < TARGET_COLUMNS; ++j) {
          if (!hitStates[i][j]) {
-            context.drawImage(enemys[i], currentPoint.x, currentPoint.y);
+            context.drawImage(enemys[i], currentPoint.x, currentPoint.y, 130, 100);
          }
          currentPoint.x += pieceWidth;
       }
@@ -422,3 +427,12 @@ function draw() {
 } // end function draw
 
 window.addEventListener("load", setupGame, false);
+
+function addkey(e){
+   keysDown[e.keyCode] = true;
+   e.preventDefault();
+}
+
+function removekey(e){
+   delete keysDown[e.keyCode];
+}

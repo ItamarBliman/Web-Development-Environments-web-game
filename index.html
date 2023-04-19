@@ -48,7 +48,7 @@
             <h1>Sign Up</h1>
             <div class="container">
 
-                <form class="well form-horizontal" action=" " method="post" id="contact_form">
+                <form class="well form-horizontal" method="post" id="contact_form">
                     <fieldset>
 
                         <!-- Form Name -->
@@ -162,7 +162,7 @@
                             <label class="col-md-4 control-label"></label>
                             <div class="col-md-4"><br>
                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                <button type="submit"
+                                <button type="submit" id="signUpSubmit"
                                     class="btn btn-warning">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSUBMIT
                                     <span class="glyphicon glyphicon-send">
                                     </span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -180,18 +180,20 @@
             <div class="login-form">
                 <h6>Sign In</h6>
 
-                <form action="">
+                <form id="logInForm">
                     <div class="textbox">
-                        <input type="text" placeholder="Username">
+                        <input name="userName" type="text" placeholder="Username" >
                         <span class="check-message hidden">Required</span>
                     </div>
 
                     <div class="textbox">
-                        <input type="password" placeholder="Password">
+                        <input name="passWord" type="password" placeholder="Password" >
                         <span class="check-message hidden">Required</span>
                     </div>
 
-                    <input type="submit" value="Log In Now" class="login-btn" disabled>
+                    <button id="logInSubmit" type="submit" class="login-btn" disabled>
+                        Log In Now
+                    </button>
                 </form>
 
                 <div class="dont-have-account">
@@ -208,15 +210,31 @@
             <h1>Configuration</h1>
         </div>
         <div id="game">
-            <h1>Spaceships Game</h1>
-            <canvas id="theCanvas" width="1200" height="600"></canvas>
-            <p><input id = "startButton" type = "button" value = "Start Game">
+            <canvas id="theCanvas"></canvas>
+            <p><input id="startButton" type="button" value="Start Game">
             </p>
         </div>
 
     </content>
 
     <script type="text/javascript" language="JavaScript">
+        var users = [];
+        users.push({ user_name: "p", user_password: "testuser", first_name: "testuser", last_name: "p", email: "p@gmail.com", birthday: "1999-01-01" });
+        const signUpForm = document.getElementById('contact_form');
+        const signUpButton = document.getElementById('signUpSubmit');
+        signUpButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            const signUpFormData = new FormData(signUpForm); // Create a new FormData object
+            saveInfo(signUpFormData); // Call your JavaScript function to process the form data
+        });
+        const logInButton = document.getElementById('logInSubmit');
+        const logInFormObj = document.getElementById('logInForm');
+        logInButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            const logInFormData = new FormData(logInFormObj); // Create a new FormData object
+            logInUser(logInFormData); // Call your JavaScript function to process the form data
+        });
+
         function switchScreen(p) {
             $('#welcome').toggle(p === 'welcome');
             $('#signUp').toggle(p === 'signUp');
@@ -224,6 +242,7 @@
             $('#about').toggle(p === 'about');
             $('#configuration').toggle(p === 'configuration');
             $('#game').toggle(p === 'game');
+            stopTimer();
         }
 
         $(".textbox input").focusout(function () {
@@ -246,6 +265,9 @@
                 $(".login-btn").removeClass("active");
             }
         });
+        canvas = document.getElementById("theCanvas");
+        canvas.width = window.innerWidth - 20;
+        canvas.height = window.innerHeight - 50;
 
     </script>
 
@@ -257,6 +279,9 @@
     </audio>
     <audio id="shotSound" preload="auto">
         <source src="sounds/cannon_fire.ogg" type="audio/ogg">
+    </audio>
+    <audio id="themeSound" preload="auto">
+        <source src="sounds/themeSound.mp3" type="audio/mp3">
     </audio>
 </body>
 
