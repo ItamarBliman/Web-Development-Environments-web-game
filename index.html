@@ -8,12 +8,14 @@
     <title>Spaceships Game</title>
 
     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> -->
     <link rel="stylesheet" type="text/css"
         href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css">
 
     <link href="//fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="stylesheet.css" />
+    <link href="//db.onlinewebfonts.com/c/97c4b25dc74e0ab045154e75a8fdd69d?family=Game+of+Thrones" rel="stylesheet"
+        type="text/css" />
 
     <script src="js/spaceships.js" type="text/javascript"></script>
     <script src="js/jquery.js" type="text/javascript"></script>
@@ -29,7 +31,7 @@
 
 <body>
     <menu id="menu">
-        <li><a onclick="switchScreen('welcome')">Welcome</a></li>
+        <li class="got-list-item"><a onclick="switchScreen('welcome')">Welcome</a></li>
         <div id="userLogout">
             <li><a onclick="switchScreen('signUp')">Sign Up</a></li>
             <li><a onclick="switchScreen('login')">Log In</a></li>
@@ -45,8 +47,16 @@
     </menu>
     <content>
         <div id="welcome" class="welcome">
-            <h1>Welcome to Spaceships Game</h1>
-            <img src="https://i.ytimg.com/vi/I3eHzai-lWA/maxresdefault.jpg" width="25%" height="25%">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h1>Welcome</h1>
+            <img src="images/logo.png" width="25%" height="25%">
             <p>Made with <span>❤</span> by<br>
                 Daniel Samira - 316164417<br>
                 Itamar Bliman - 312235765
@@ -58,7 +68,7 @@
             <h1>Sign Up</h1>
             <div class="container">
 
-                <form class="well form-horizontal" method="post" id="contact_form">
+                <form class="well form-horizontal" method="post" id="contact_form" style="background-color: #202020a8;">
                     <fieldset>
 
                         <!-- Form Name -->
@@ -186,10 +196,15 @@
         </div><!-- /.container -->
         </div>
         <div id="login">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
             <h1>Login</h1>
             <div class="login-form">
-                <h6>Sign In</h6>
-
                 <form id="logInForm">
                     <div class="textbox">
                         <input name="userName" type="text" placeholder="Username">
@@ -207,7 +222,7 @@
                 </form>
 
                 <div class="dont-have-account">
-                    Don't have an Spaceships Game account?
+                    Don't have a Games of Dragons account yet?
                     <a onclick="switchScreen('signUp')">Sign Up</a>
                 </div>
             </div>
