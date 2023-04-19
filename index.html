@@ -7,14 +7,15 @@
     <meta charset="utf-8">
     <title>Spaceships Game</title>
 
-    
     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> -->
     <link rel="stylesheet" type="text/css"
         href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css">
 
     <link href="//fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="stylesheet.css" />
+    <link href="//db.onlinewebfonts.com/c/97c4b25dc74e0ab045154e75a8fdd69d?family=Game+of+Thrones" rel="stylesheet"
+        type="text/css" />
 
     <script src="js/spaceships.js" type="text/javascript"></script>
     <script src="js/jquery.js" type="text/javascript"></script>
@@ -25,11 +26,12 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"
         type="text/javascript"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/dialog-polyfill.js" type="text/javascript"></script>
 </head>
 
 <body>
     <menu id="menu">
-        <li><a onclick="switchScreen('welcome')">Welcome</a></li>
+        <li class="got-list-item"><a onclick="switchScreen('welcome')">Welcome</a></li>
         <div id="userLogout">
             <li><a onclick="switchScreen('signUp')">Sign Up</a></li>
             <li><a onclick="switchScreen('login')">Log In</a></li>
@@ -41,12 +43,20 @@
         <div id="inGame">
             <li><a onclick="switchScreen('game')">New Game</a></li>
         </div>
-        <li class="right"><a onclick="switchScreen('about')">About</a></li>
+        <li class="right"><a id="showDialog">About</a></li>
     </menu>
     <content>
         <div id="welcome" class="welcome">
-            <h1>Welcome to Spaceships Game</h1>
-            <img src="https://i.ytimg.com/vi/I3eHzai-lWA/maxresdefault.jpg" width="25%" height="25%">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h1>Welcome</h1>
+            <img src="images/logo.png" width="25%" height="25%">
             <p>Made with <span>❤</span> by<br>
                 Daniel Samira - 316164417<br>
                 Itamar Bliman - 312235765
@@ -58,7 +68,7 @@
             <h1>Sign Up</h1>
             <div class="container">
 
-                <form class="well form-horizontal" method="post" id="contact_form">
+                <form class="well form-horizontal" method="post" id="contact_form" style="background-color: #202020a8;">
                     <fieldset>
 
                         <!-- Form Name -->
@@ -186,10 +196,15 @@
         </div><!-- /.container -->
         </div>
         <div id="login">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
             <h1>Login</h1>
             <div class="login-form">
-                <h6>Sign In</h6>
-
                 <form id="logInForm">
                     <div class="textbox">
                         <input name="userName" type="text" placeholder="Username">
@@ -207,14 +222,10 @@
                 </form>
 
                 <div class="dont-have-account">
-                    Don't have an Spaceships Game account?
+                    Don't have a Games of Dragons account yet?
                     <a onclick="switchScreen('signUp')">Sign Up</a>
                 </div>
             </div>
-        </div>
-
-        <div id="about">
-            <h1>About</h1>
         </div>
         <div id="configuration">
             <h1>Configuration</h1>
@@ -226,10 +237,45 @@
 
     </content>
 
+    <!-- Dialog with Background: Begin -->
+    <dialog class="bcgrnd animate" id="aboutDialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onClick="closeDialog()">&times;</span>
+                <h2>About</h2>
+            </div>
+            <div class="modal-body">
+                <form method="dialog">
+                    <br />
+                    <button>Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Dialog with Background: Begin -->
+    <dialog class="bcgrnd animate" id="gameOverDialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onClick="closeDialog()">&times;</span>
+                <h2>Game Over</h2>
+            </div>
+            <div class="modal-body">
+                <form method="dialog">
+                    <p id="messageResult"></p>
+                    <table id="tableResults" class="styled-table"></table>
+                    <br />
+                    <button onclick="switchScreen('game')">New Game</button>
+                    <button>Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
     <script type="text/javascript" language="JavaScript">
         var users = [];
         var currentUser = null;
-        var games = [];
+        var results = [];
         users.push({ user_name: "p", user_password: "testuser", first_name: "testuser", last_name: "p", email: "p@gmail.com", birthday: "1999-01-01" });
         const signUpForm = document.getElementById('contact_form');
         const signUpButton = document.getElementById('signUpSubmit');
@@ -246,10 +292,10 @@
             logInUser(logInFormData); // Call your JavaScript function to process the form data
         });
 
-        function logoutFun(){
+        function logoutFun() {
             setConfig = false;
             currentUser = null;
-            games = [];
+            results = [];
             $('#userLogout').toggle(true);
             $('#userLogin').toggle(false);
             $('#inGame').toggle(false);
@@ -264,8 +310,27 @@
             $('#configuration').toggle(p === 'configuration');
             $('#game').toggle(p === 'game');
             stopTimer();
-            if(p === 'game')
+            if (p === 'game')
                 newGame();
+        }
+
+        const showButton = document.getElementById('showDialog');
+        const favDialogObject = document.getElementById('aboutDialog');
+        const gameOverDialogObject = document.getElementById('gameOverDialog');
+        const tableResultsObject = document.getElementById('tableResults');
+
+
+
+
+        // "Show the dialog" button opens the <dialog> modally
+        showButton.addEventListener('click', () => {
+            dialogPolyfill.registerDialog(favDialogObject);
+            favDialogObject.showModal();
+        });
+
+        function closeDialog() {
+            favDialogObject.close();
+            gameOverDialogObject.close();
         }
 
         $(".textbox input").focusout(function () {
