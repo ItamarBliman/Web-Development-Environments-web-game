@@ -25,14 +25,19 @@ body {
 #login,
 #about,
 #configuration,
-#welcome {
+#game {
 	display: none;
 	text-align: center;
 }
 
-#game {
+#welcome {
 	display: block;
 	text-align: center;
+}
+
+#userLogin,
+#inGame {
+	display: none;
 }
 
 #currentImg {

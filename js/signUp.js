@@ -134,7 +134,10 @@ function logInUser(formData){
     var pass = formData.get('passWord');
     for(var i = 0; i < users.length; i++){
         if(user == users[i].user_name && pass == users[i].user_password){
+            currentUser = users[i];
             alert("Log in successfully! \n" + users[i].user_name + " is now logged in.");
+            $('#userLogout').toggle(false);
+            $('#userLogin').toggle(true);
             switchScreen("configuration");
             return;
         }

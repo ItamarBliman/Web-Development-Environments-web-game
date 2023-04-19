@@ -67,8 +67,8 @@ function setupGame() {
    context = canvas.getContext("2d");
 
    // start a new game when user clicks Start Game button
-   document.getElementById("startButton").addEventListener(
-      "click", newGame, false);
+   // document.getElementById("startButton").addEventListener(
+   //    "click", newGame, false);
 
    // JavaScript Object representing game items
    target = new Object(); // object representing target line
@@ -77,10 +77,6 @@ function setupGame() {
 
    canvasWidth = canvas.width; // store the width
    canvasHeight = canvas.height; // store the height
-
-   // Background image
-   bgImage = new Image();
-   bgImage.src = "images/background.png";
 
    // Hero image
    heroImage = new Image();
@@ -169,6 +165,7 @@ function resetElements() {
 
 // reset all the screen elements and start a new game
 function newGame() {
+   $('#inGame').toggle(true);
    resetElements(); // reinitialize all game elements
    stopTimer(); // terminate previous interval timer
 
@@ -428,11 +425,11 @@ function draw() {
 
 window.addEventListener("load", setupGame, false);
 
-function addkey(e){
+function addkey(e) {
    keysDown[e.keyCode] = true;
    e.preventDefault();
 }
 
-function removekey(e){
+function removekey(e) {
    delete keysDown[e.keyCode];
 }
