@@ -104,7 +104,6 @@ function setupGame() {
    shot = { speed: defaultSpeed }; // movement in pixels per second
    target.speed = defaultSpeed; // movement in pixels per second
 
-
    // initialize hitStates as an array
    hitStates = new Array(TARGET_ROWS);
    for (var i = 0; i < TARGET_COLUMNS; i++)
@@ -191,6 +190,8 @@ function newGame() {
    heroShotVelocity = shot.speed; // set initial velocity
    enemyShotVelocity = shot.speed; // set initial velocity
    heroVelocity = hero.speed; // set initial velocity
+   // Handle keyboard controls
+   keysDown = {};
 
    startTimer(); // starts the game loop
    themeSound.play(); // play the theme music
@@ -259,10 +260,8 @@ function updatePositions() {
 
             // if all pieces have been hit
             if (++targetPiecesHit == TARGET_PIECES) {
-               stopTimer(); // game over so stop the interval timer
                draw(); // draw the game pieces one final time
-               alert("Champion!");
-
+               gameOver("Champion!");
             } // end if
          } // end if
       } // end else if
@@ -285,8 +284,7 @@ function updatePositions() {
             targetSound.play(); // play target hit sound
             Strikes--;
             if (Strikes == 0) {
-               stopTimer(); // game over so stop the interval timer
-               alert("You Lost!");
+               gameOver("You Lost!");
             }
             hero.x = canvasWidth / 2;
             hero.y = canvasHeight - heroHeight;
@@ -324,11 +322,11 @@ function updatePositions() {
 
    // if the timer reached zero
    if (timeLeft <= 0) {
-      stopTimer();
       if (score < 100)
-         alert("you can do better, you only got " + score + " points");
+         gameOver("you can do better, you only got " + score + " points");
       else
-         alert("Winner!!");
+         gameOver("Winner!!");
+
 
       showGameOverDialog("You lost"); // show the losing dialog
    } // end if
@@ -435,4 +433,37 @@ function addkey(e) {
 
 function removekey(e) {
    delete keysDown[e.keyCode];
+}
+
+function gameOver(message) {
+   stopTimer();
+   let cols = { rank: "Rank", user_name: "User Name", score: "Score", time: "Time" };
+   let newResult = { user_name: currentUser.user_name, score: score, time: timeElapsed }
+   let pMessage = document.getElementById("messageResult");
+   results.push(newResult);
+   results.sort((a, b) => {
+      if (a.score === b.score) {
+         return a.time < b.time ? -1 : 1
+      } else {
+         return b.score < a.score ? -1 : 1
+      }
+   });
+   let activeRow = false;
+   let toTable = `<thead><tr><td>${cols.rank}</td><td>${cols.user_name}</td><td>${cols.score}</td><td>${cols.time}</td></tr></thead>`;
+   toTable += `<tbody>`;
+   for (let i = 0; i < results.length; i++) {
+      if (!activeRow && newResult.score == results[i].score && newResult.time == results[i].time) {
+         toTable += `<tr class="active-row">`;
+         activeRow = true;
+      }
+      else {
+         toTable += `<tr>`;
+      }
+      toTable += `<td>${i + 1}</td><td>${results[i].user_name}</td><td>${results[i].score}</td><td>${results[i].time}</td></tr>`;
+   }
+   toTable += `</tbody>`;
+   tableResultsObject.innerHTML = toTable;
+   pMessage.innerHTML = message;
+   dialogPolyfill.registerDialog(gameOverDialogObject);
+   gameOverDialogObject.showModal();
 }
