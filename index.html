@@ -45,7 +45,7 @@
         <div id="inGame">
             <li><a onclick="switchScreen('game')">New Game</a></li>
         </div>
-        
+
         <li class="right"><a id="showDialog">About</a></li>
     </menu>
     <content>
@@ -73,7 +73,7 @@
             <h1>Sign Up</h1>
             <div class="signUpcontainer">
 
-                <form class="well form-horizontal" method="post" id="contact_form" style="background-color: #202020a8;">
+                <form class="well form-horizontal" id="contact_form" style="background-color: #202020a8;">
                     <fieldset>
 
                         <!-- Form Name -->
@@ -83,7 +83,7 @@
 
                         <!-- Text input-->
 
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label class="col-md-4 control-label">Username</label>
                             <div class="col-md-4 inputGroupContainer">
                                 <div class="input-group">
@@ -282,13 +282,6 @@
         var currentUser = null;
         var results = [];
         users.push({ user_name: "p", user_password: "testuser", first_name: "testuser", last_name: "p", email: "p@gmail.com", birthday: "1999-01-01" });
-        const signUpForm = document.getElementById('contact_form');
-        const signUpButton = document.getElementById('signUpSubmit');
-        signUpButton.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent the default form submission behavior
-            const signUpFormData = new FormData(signUpForm); // Create a new FormData object
-            saveInfo(signUpFormData); // Call your JavaScript function to process the form data
-        });
         const logInButton = document.getElementById('logInSubmit');
         const logInFormObj = document.getElementById('logInForm');
         logInButton.addEventListener('click', function (event) {

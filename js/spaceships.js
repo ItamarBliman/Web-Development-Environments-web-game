@@ -123,7 +123,6 @@ function startTimer() {
    intervalTimer = window.setInterval(updatePositions, TIME_INTERVAL);
    // Check for keys pressed where key represents the keycode captured
    addEventListener("keydown", addkey, false);
-
    addEventListener("keyup", removekey, false);
 } // end function startTimer
 
