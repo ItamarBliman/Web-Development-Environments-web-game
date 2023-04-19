@@ -49,11 +49,11 @@ body {
 
 p {
 	direction: rtl;
-	border: #16697c;
+	color:  #f8d7c5;
 	padding: 10;
 	text-align: center;
-	border-style: ridge;
-	border-radius: 5px;
+	font-size: 20px;
+
 }
 
 h1 {
@@ -74,15 +74,15 @@ h1 {
 
 @keyframes neon {
 	0% {
-		text-shadow: 0 0 20px #ffe91f, 0 0 40px #fb8435, 0 0 60px #390000;
+		text-shadow: 0 0 20px #ffe91f, 0 0 40px #fb8435, 0 0 60px #000000;
 	}
 
 	50% {
-		text-shadow: 0 0 20px #ff6831, 0 0 40px #fff2e9e5, 0 0 60px #fff700;
+		text-shadow: 0 0 20px #ff4c0b, 0 0 40px #fff2e9e5, 0 0 60px #fff700;
 	}
 
 	100% {
-		text-shadow: 0 0 20px #f79d0c, 0 0 40px #d8f616, 0 0 60px #f31f1f;
+		text-shadow: 0 0 20px #f79d0c, 0 0 40px #d8f616, 0 0 60px #000000;
 	}
 }
 
@@ -157,10 +157,15 @@ menu li:hover::before {
 	transform: scale(1, 1);
 }
 
-
+menu li.logo {
+	float: left;
+	border-style: ridge;
+	border-color: #00000063;
+}
 menu li.right {
 	float: right;
 }
+
 
 .content {
 	height: 400px;
@@ -222,14 +227,29 @@ button {
 }
 
 .reg {
+	font-family: "Game of Thrones";
+
 	color: white;
-	background-color: rgba(104, 85, 224, 1);
+	background-color: #333;
 }
 
 .log {
-	color: rgb(104, 85, 224);
+	font-family: "Game of Thrones";
+	color: #333;
 	background-color: rgba(255, 255, 255, 1);
-	border: 1px solid rgba(104, 85, 224, 1);
+	border: 1px solid#333;;
+}
+
+.reg:hover {
+	color: #333;
+	background-color: rgba(255, 255, 255, 1);
+	box-shadow: 0 0 20px rgb(204, 23, 3);
+}
+
+.log:hover {
+	color: white;
+	background-color:  #333;
+	box-shadow: 0 0 20px rgb(204, 23, 3);
 }
 
 button:hover {

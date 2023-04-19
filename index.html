@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Spaceships Game</title>
+    <title>Games of Dragons</title>
 
     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <!-- <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> -->
@@ -31,6 +31,8 @@
 
 <body>
     <menu id="menu">
+        <li class="logo"><img src="images/logo.png" width=80 height=50></li>
+
         <li class="got-list-item"><a onclick="switchScreen('welcome')">Welcome</a></li>
         <div id="userLogout">
             <li><a onclick="switchScreen('signUp')">Sign Up</a></li>
@@ -43,6 +45,7 @@
         <div id="inGame">
             <li><a onclick="switchScreen('game')">New Game</a></li>
         </div>
+        
         <li class="right"><a id="showDialog">About</a></li>
     </menu>
     <content>
@@ -57,16 +60,18 @@
             <br>
             <h1>Welcome</h1>
             <img src="images/logo.png" width="25%" height="25%">
+            <br>
+            <button class="log" onclick="switchScreen('login')">Login</button>
+            <button class="reg" onclick="switchScreen('signUp')">Sign up</button>
             <p>Made with <span>❤</span> by<br>
                 Daniel Samira - 316164417<br>
                 Itamar Bliman - 312235765
             </p>
-            <button class="log" onclick="switchScreen('login')">Login</button>
-            <button class="reg" onclick="switchScreen('signUp')">Sign up</button>
         </div>
         <div id="signUp">
+            <br>
             <h1>Sign Up</h1>
-            <div class="container">
+            <div class="signUpcontainer">
 
                 <form class="well form-horizontal" method="post" id="contact_form" style="background-color: #202020a8;">
                     <fieldset>
@@ -78,7 +83,7 @@
 
                         <!-- Text input-->
 
-                        <div class="form-group">
+                        <div class="form-group" >
                             <label class="col-md-4 control-label">Username</label>
                             <div class="col-md-4 inputGroupContainer">
                                 <div class="input-group">
@@ -152,7 +157,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Birthday</label>
                             <div class="col-md-4 selectContainer">
-                                <div class="input-group">
+                                <div class="input-group" style="text-align: left;">
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                     <!-- <select name="department" class="form-control selectpicker">
                                         <option value="">Select your Department/Office</option>
