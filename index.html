@@ -24,6 +24,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"
         type="text/javascript"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/dialog-polyfill.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -40,7 +41,7 @@
         <div id="inGame">
             <li><a onclick="switchScreen('game')">New Game</a></li>
         </div>
-        <li class="right"><a onclick="switchScreen('about')">About</a></li>
+        <li class="right"><a id="showDialog">About</a></li>
     </menu>
     <content>
         <div id="welcome" class="welcome">
@@ -211,10 +212,6 @@
                 </div>
             </div>
         </div>
-
-        <div id="about">
-            <h1>About</h1>
-        </div>
         <div id="configuration">
             <h1>Configuration</h1>
             <input onclick="switchScreen('game')" id="startButton" type="button" value="Start Game">
@@ -225,10 +222,45 @@
 
     </content>
 
+    <!-- Dialog with Background: Begin -->
+    <dialog class="bcgrnd animate" id="aboutDialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onClick="closeDialog()">&times;</span>
+                <h2>About</h2>
+            </div>
+            <div class="modal-body">
+                <form method="dialog">
+                    <br />
+                    <button>Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Dialog with Background: Begin -->
+    <dialog class="bcgrnd animate" id="gameOverDialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onClick="closeDialog()">&times;</span>
+                <h2>Game Over</h2>
+            </div>
+            <div class="modal-body">
+                <form method="dialog">
+                    <p id="messageResult"></p>
+                    <table id="tableResults" class="styled-table"></table>
+                    <br />
+                    <button onclick="switchScreen('game')">New Game</button>
+                    <button>Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
     <script type="text/javascript" language="JavaScript">
         var users = [];
         var currentUser = null;
-        var games = [];
+        var results = [];
         users.push({ user_name: "p", user_password: "testuser", first_name: "testuser", last_name: "p", email: "p@gmail.com", birthday: "1999-01-01" });
         const signUpForm = document.getElementById('contact_form');
         const signUpButton = document.getElementById('signUpSubmit');
@@ -245,10 +277,10 @@
             logInUser(logInFormData); // Call your JavaScript function to process the form data
         });
 
-        function logoutFun(){
+        function logoutFun() {
             setConfig = false;
             currentUser = null;
-            games = [];
+            results = [];
             $('#userLogout').toggle(true);
             $('#userLogin').toggle(false);
             $('#inGame').toggle(false);
@@ -263,8 +295,27 @@
             $('#configuration').toggle(p === 'configuration');
             $('#game').toggle(p === 'game');
             stopTimer();
-            if(p === 'game')
+            if (p === 'game')
                 newGame();
+        }
+
+        const showButton = document.getElementById('showDialog');
+        const favDialogObject = document.getElementById('aboutDialog');
+        const gameOverDialogObject = document.getElementById('gameOverDialog');
+        const tableResultsObject = document.getElementById('tableResults');
+
+
+
+
+        // "Show the dialog" button opens the <dialog> modally
+        showButton.addEventListener('click', () => {
+            dialogPolyfill.registerDialog(favDialogObject);
+            favDialogObject.showModal();
+        });
+
+        function closeDialog() {
+            favDialogObject.close();
+            gameOverDialogObject.close();
         }
 
         $(".textbox input").focusout(function () {

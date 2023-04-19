@@ -17,8 +17,7 @@ body {
 	background: -o-linear-gradient(-135deg, #c850c0, #4158d0);
 	background: -moz-linear-gradient(-135deg, #c850c0, #4158d0);
 	background: linear-gradient(-135deg, #c850c0, #4158d0);
-	/* overflow: hidden; */
-
+	overflow: hidden;
 }
 
 #signUp,
@@ -206,7 +205,6 @@ button:hover {
 }
 
 
-
 * {
 	margin: 0;
 	padding: 0;
@@ -351,4 +349,116 @@ button:hover {
 		width: 100%;
 		padding: 0 15px;
 	}
+}
+
+dialog::backdrop {
+	background: repeating-linear-gradient(
+	  30deg,
+	  rgba(24, 194, 236, 0.2),
+	  rgba(24, 194, 236, 0.2) 1px,
+	  rgba(24, 194, 236, 0.3) 1px,
+	  rgba(24, 194, 236, 0.3) 20px
+	);
+	backdrop-filter: blur(1px)
+  }
+
+@keyframes animate-top {
+	from {
+		top: -300px;
+		opacity: 0
+	}
+
+	to {
+		top: 0;
+		opacity: 1
+	}
+}
+
+.animate {
+	animation-name: animate-top;
+	animation-duration: 0.4s;
+}
+
+.bcgrnd {
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background: none;
+	border: none;
+}
+
+.modal-content {
+	position: relative;
+	background-color: #fefefe;
+	margin: auto;
+	padding: 0;
+	border: 1px solid #888;
+	width: 80%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.modal-header {
+	padding: 2px 16px;
+	background-color: #000;
+	color: #FFF;
+}
+
+.close {
+	color: #FFF;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.modal-body {
+	padding: 2px 16px;
+}
+
+.container {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(4, 1fr);
+	margin-top: 3rem;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
 }
