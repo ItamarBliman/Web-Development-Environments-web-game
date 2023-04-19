@@ -30,6 +30,8 @@ var heroVelocity; // hero speed multiplier during game
 var defaultSpeed = 200; // default speed multiplier
 var maxTimesVelocity; // maximum number of times to increase velocity
 var velocityIncrement = 40; // amount to increase velocity each time
+var heroHeight = 100; // hero height
+var heroWidth = 60; // hero width
 
 var hitStates; // is each target piece hit?
 var targetPiecesHit; // number of target pieces hit (out of 20)
@@ -102,8 +104,6 @@ function setupGame() {
    shot = { speed: defaultSpeed }; // movement in pixels per second
    target.speed = defaultSpeed; // movement in pixels per second
 
-   // Handle keyboard controls
-   keysDown = {};
 
    // initialize hitStates as an array
    hitStates = new Array(TARGET_ROWS);
@@ -157,7 +157,7 @@ function resetElements() {
    target.end.x = targetEndX;
    target.end.y = targetEndY;
    hero.x = canvasWidth / 2;
-   hero.y = canvasHeight - heroImage.height;
+   hero.y = canvasHeight - heroHeight;
 
 
 
@@ -168,6 +168,9 @@ function newGame() {
    $('#inGame').toggle(true);
    resetElements(); // reinitialize all game elements
    stopTimer(); // terminate previous interval timer
+
+   // Handle keyboard controls
+   keysDown = {};
 
    // set every element of hitStates to false--restores target pieces
    for (var i = 0; i < TARGET_ROWS; ++i)
@@ -201,7 +204,7 @@ function updatePositions() {
          hero.y -= heroVelocity * interval;
    }
    if ((40 in keysDown)) { // Player holding down
-      if (hero.y < canvasHeight - 0.8 * heroImage.height)
+      if (hero.y < canvasHeight - 0.8 * heroHeight)
          hero.y += heroVelocity * interval;
    }
    if (37 in keysDown) { // Player holding left
@@ -209,7 +212,7 @@ function updatePositions() {
          hero.x -= heroVelocity * interval;
    }
    if (39 in keysDown) { // Player holding right
-      if (hero.x < canvasWidth - heroImage.width)
+      if (hero.x < canvasWidth - heroWidth)
          hero.x += heroVelocity * interval;
    }
 
@@ -286,7 +289,7 @@ function updatePositions() {
                alert("You Lost!");
             }
             hero.x = canvasWidth / 2;
-            hero.y = canvasHeight - heroImage.height;
+            hero.y = canvasHeight - heroHeight;
             enemyShots = [];
             shotOnScreen = false;
 
@@ -403,7 +406,7 @@ function draw() {
       context.drawImage(enemyShotImage, enemyShots[i].x, enemyShots[i].y);
    }
 
-   context.drawImage(heroImage, hero.x, hero.y); // draw the hero
+   context.drawImage(heroImage, hero.x, hero.y, heroWidth, heroHeight); // draw the hero
 
    // initialize currentPoint to the starting point of the target
    var currentPoint = new Object();
