@@ -395,14 +395,29 @@ function fireShot(event) {
 // draws the game elements to the given Canvas
 function draw() {
    canvas.width = canvas.width; // clears the canvas (from W3C docs)
+   let text = "Time remaining: " + timeLeft + " sec     Strikes remaining: " + Strikes + "     Score: " + score;
+   context.font = 'bold 40px calibri';
 
-   // display time remaining
-   context.fillStyle = "black";
-   context.font = "bold 24px serif";
-   context.textBaseline = "top";
-   context.fillText("Time remaining: " + timeLeft + " sec     Strikes remaining: " + Strikes + "     Score: " + score, 570, 5);
+   // Create a gradient for the text
+   const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
+   gradient.addColorStop(0, '#ff0000');
+   gradient.addColorStop(0.5, '#ffff00');
+   gradient.addColorStop(1, '#ff0000');
 
+   // Set the fill style to the gradient
+   context.fillStyle = gradient;
 
+   // Set the stroke style and width
+   context.strokeStyle = 'red';
+   context.lineWidth = 0.5;
+
+   // Set the text to be centered horizontally and vertically
+   context.textAlign = 'center';
+   context.textBaseline = 'middle';
+
+   // Draw the text on the canvas
+   context.fillText(text, canvas.width / 2, 25);
+   context.strokeText(text, canvas.width / 2, 25);
 
    // if a shot is currently on the screen, draw it
    for (let i = 0; i < shotsOfHero.length; i++) {

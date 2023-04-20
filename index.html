@@ -243,8 +243,13 @@
                     <td>
                         <label for="keyboard">Shooting Keyboard:</label>
                     </td>
-                    <td><input type="text" id="keyboard" value="Space" onclick="onListen()" onfocusout="offListen()"
-                            readonly="readonly"></td>
+                    <td>
+                        <div class="image-container">
+                            <img src="Images/keyboardImage.png">
+                            <input type="text" id="keyboard" value="Space" onclick="onListen()" onfocusout="offListen()"
+                                readonly="readonly">
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -257,13 +262,16 @@
                         <label for="speed">Choose enemys speed:</label>
                     </td>
                     <td>
-                        <fieldset>
-                                <label for="huey" style="display: inline-block;"><input type="radio" id="easy" name="drone" value=180 style="display: block;margin: 0 auto;">Easy</label>
+                        <div class="radio-container">
+                            <fieldset>
+                                <label for="huey"><input type="radio" id="easy" name="drone" value=180>Easy</label>
 
-                                <label for="dewey" style="display: inline-block;"><input type="radio" id="medium" name="drone" value=250 style="display: block;margin: 0 auto;" checked>Medium</label>
+                                <label for="dewey"><input type="radio" id="medium" name="drone" value=250
+                                        checked>Medium</label>
 
-                                <label for="louie" style="display: inline-block;"><input type="radio" id="hard" name="drone" value=350 style="display: block;margin: 0 auto;">Hard</label>
-                        </fieldset>
+                                <label for="louie"><input type="radio" id="hard" name="drone" value=350>Hard</label>
+                            </fieldset>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -271,7 +279,8 @@
                         <label for="volume">Sound:</label>
                     </td>
                     <td>
-                        <input id="sound" type="range" min="0" max="1" step="0.01" oninput="rangeValue.innerText = parseInt(this.value * 100)" />
+                        <input id="sound" type="range" min="0" max="1" step="0.01"
+                            oninput="rangeValue.innerText = parseInt(this.value * 100)" />
                         <label id="rangeValue">50</label>
                     </td>
                 </tr>
@@ -280,7 +289,8 @@
                         <label for="shotsNumber">Number of Shots:</label>
                     </td>
                     <td>
-                        <input id="numberOfShots" type="range" min="1" max="3" step="1" oninput="rangeShotsValue.innerText = this.value " />
+                        <input id="numberOfShots" type="range" min="1" max="3" step="1"
+                            oninput="rangeShotsValue.innerText = this.value " />
                         <label id="rangeShotsValue">2</label>
                     </td>
                 </tr>
@@ -290,15 +300,19 @@
                     </td>
                     <td>
                         <fieldset>
-                                <label for="hero0" style="display: inline-block;"><input type="radio" id="hero0" name="heroPlayer" value="Images/hero0.png" style="display: block;margin: 0 auto;"><img src="Images/hero0.png" width=50 height=80></label>
+                            <label for="hero0"><input type="radio" id="hero0" name="heroPlayer"
+                                    value="Images/hero0.png"><img src="Images/hero0.png" width=50 height=80></label>
 
-                                <label for="hero1" style="display: inline-block;"><input type="radio" id="hero1" name="heroPlayer" value="Images/hero1.png" style="display: block;margin: 0 auto;" checked><img src="Images/hero1.png" width=50 height=80></label>
+                            <label for="hero1"><input type="radio" id="hero1" name="heroPlayer" value="Images/hero1.png"
+                                    checked><img src="Images/hero1.png" width=50 height=80></label>
 
-                                <label for="hero2" style="display: inline-block;"><input type="radio" id="hero2" name="heroPlayer" value="Images/hero2.png" style="display: block;margin: 0 auto;"><img src="Images/hero2.png" width=50 height=80></label>
+                            <label for="hero2"><input type="radio" id="hero2" name="heroPlayer"
+                                    value="Images/hero2.png"><img src="Images/hero2.png" width=50 height=80></label>
                         </fieldset>
                     </td>
                 </tr>
             </table>
+            <br>
             <button class="reg" onclick="switchScreen('game')" id="startButton">
                 Start Game
             </button>
@@ -324,7 +338,7 @@
             <div class="modal-body">
                 <form method="dialog">
                     <br />
-                    <button>Close</button>
+                    <button class="log" onClick="closeDialog()">Close</button>
                 </form>
             </div>
         </div>
@@ -335,15 +349,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span class="close" onClick="closeDialog()">&times;</span>
-                <h2>Game Over</h2>
+                <h2>Game &nbspOver</h2>
             </div>
             <div class="modal-body">
                 <form method="dialog">
-                    <p id="messageResult"></p>
+                    <label id="messageResult"></label>
                     <table id="tableResults" class="styled-table"></table>
                     <br />
-                    <button onclick="switchScreen('game')">New Game</button>
-                    <button>Close</button>
+                    <button class="log" onclick="switchScreen('game')">New Game</button>
+                    <button class="reg" onClick="closeDialog()">Close</button>
                 </form>
             </div>
         </div>
@@ -443,7 +457,7 @@
         });
         canvas = document.getElementById("theCanvas");
         canvas.width = window.innerWidth - 20;
-        canvas.height = window.innerHeight - 50;
+        canvas.height = window.innerHeight - 80;
 
     </script>
 
