@@ -7,10 +7,12 @@ $(document).ready(function () {
             validating: 'glyphicon glyphicon-refresh'
         },
         submitHandler: function (validator, form, submitButton) {
-            $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
+            // $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
             $('#contact_form').data('bootstrapValidator').resetForm();
 
             var bv = form.data('bootstrapValidator');
+            document.getElementById("contact_form").reset();
+
             saveInfo(bv);
             // Use Ajax to submit form data
             $.post(form.attr('action'), form.serialize(), function (result) {
@@ -125,13 +127,14 @@ function logInUser(formData) {
     var pass = formData.get('passWord');
     for (var i = 0; i < users.length; i++) {
         if (user == users[i].user_name && pass == users[i].user_password) {
+            document.getElementById("error-message hidden").innerHTML = "";
             currentUser = users[i];
-            alert("Log in successfully! \n" + users[i].user_name + " is now logged in.");
+            logInFormObj.reset();
             $('#userLogout').toggle(false);
             $('#userLogin').toggle(true);
             switchScreen("configuration");
             return;
         }
     }
-    alert("Log in failed! Please check your username and password.");
+    document.getElementById("error-message hidden").innerHTML = "Log in failed! Please check your username and password";
 }

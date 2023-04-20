@@ -73,7 +73,8 @@
             <h1>Sign Up</h1>
             <div class="signUpcontainer">
 
-                <form class="well form-horizontal" id="contact_form" style="background-color: #202020a8;">
+                <form class="well form-horizontal" id="contact_form"
+                    style="background-color: #202020a8;width: 60%;margin: auto;">
                     <fieldset>
 
                         <!-- Form Name -->
@@ -221,6 +222,9 @@
                         <span class="check-message hidden">Required</span>
                     </div>
 
+                    <br>
+                    <span id="error-message hidden" style="color: red;"></span>
+
                     <button id="logInSubmit" type="submit" class="login-btn" disabled>
                         Log In Now
                     </button>
@@ -234,6 +238,38 @@
         </div>
         <div id="configuration">
             <h1>Configuration</h1>
+            <table>
+                <tr>
+                    <td>Shooting Keyboard:</td>
+                    <td><input type="text" id="keyboard" value="Space" onclick="onListen()" onfocusout="offListen()"
+                            readonly="readonly"></td>
+                </tr>
+                <tr>
+                    <td>Time in Seconds:</td>
+                    <td><input type="number" id="timetoPlay" min="120" value="120"></td>
+                </tr>
+                <tr>
+                    <td>choose enemys speed:</td>
+                    <td>
+                        <fieldset>
+                            <div>
+                                <input type="radio" id="easy" name="drone" value=180>
+                                <label for="huey">Easy</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="medium" name="drone" value=250 checked>
+                                <label for="dewey">Medium</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="hard" name="drone" value=350>
+                                <label for="louie">Hard</label>
+                            </div>
+                        </fieldset>
+                    </td>
+                </tr>
+            </table>
             <input onclick="switchScreen('game')" id="startButton" type="button" value="Start Game">
         </div>
         <div id="game">
@@ -241,6 +277,11 @@
         </div>
 
     </content>
+
+    <footer style="color:white;margin-top: auto;">
+        <span>&nbspDaniel: samirada@post.bgu.ac.il&nbsp&nbsp|&nbsp&nbspItamar: Bliman@post.bgu.ac.il</span>
+        <span style="float: right;">&copy Daniel and Itamar&nbsp</span>
+    </footer>
 
     <!-- Dialog with Background: Begin -->
     <dialog class="bcgrnd animate" id="aboutDialog">
@@ -281,6 +322,8 @@
         var users = [];
         var currentUser = null;
         var results = [];
+        var keyboardTextBox = document.getElementById('keyboard');
+        var timetoPlay = document.getElementById('timetoPlay');
         users.push({ user_name: "p", user_password: "testuser", first_name: "testuser", last_name: "p", email: "p@gmail.com", birthday: "1999-01-01" });
         const logInButton = document.getElementById('logInSubmit');
         const logInFormObj = document.getElementById('logInForm');
@@ -289,6 +332,22 @@
             const logInFormData = new FormData(logInFormObj); // Create a new FormData object
             logInUser(logInFormData); // Call your JavaScript function to process the form data
         });
+
+        function onListen() {
+            keyboardTextBox.addEventListener('keypress', keyboardToText, false);
+        }
+
+        function offListen() {
+            keyboardTextBox.removeEventListener('keypress', keyboardToText, false);
+        }
+
+        function keyboardToText(e) {
+            // var name = event.key;
+            // var code = event.code;
+            keyboard.value = e.code;
+            // e.preventDefault();
+            return false;
+        }
 
         function logoutFun() {
             setConfig = false;
@@ -316,8 +375,6 @@
         const favDialogObject = document.getElementById('aboutDialog');
         const gameOverDialogObject = document.getElementById('gameOverDialog');
         const tableResultsObject = document.getElementById('tableResults');
-
-
 
 
         // "Show the dialog" button opens the <dialog> modally

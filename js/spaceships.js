@@ -119,7 +119,8 @@ function setupGame() {
 
 // set up interval timer to update game
 function startTimer() {
-   canvas.addEventListener("click", fireShot, false);
+   // canvas.addEventListener("keypress", fireShot, false);
+   addEventListener("keypress", fireShot, false);
    intervalTimer = window.setInterval(updatePositions, TIME_INTERVAL);
    // Check for keys pressed where key represents the keycode captured
    addEventListener("keydown", addkey, false);
@@ -128,12 +129,14 @@ function startTimer() {
 
 // terminate interval timer
 function stopTimer() {
-   canvas.removeEventListener("click", fireShot, false);
+   // canvas.removeEventListener("keypress", fireShot, false);
+   removeEventListener("keypress", fireShot, false);
    window.clearInterval(intervalTimer);
    themeSound.pause();
    themeSound.currentTime = 0;
    removeEventListener("keydown", addkey, false);
    removeEventListener("keyup", removekey, false);
+
 } // end function stopTimer
 
 // called by function newGame to scale the size of the game elements
@@ -176,9 +179,13 @@ function newGame() {
          hitStates[i][j] = false; // target piece not destroyed
 
    targetPiecesHit = 0; // no target pieces have been hit
-   targetVelocity = target.speed; // set initial velocity
+   targetVelocity = parseInt($('input[name="drone"]:checked').val()); // set initial velocity
    veloctiyIncrementLevel = 0; // velocity has not been increased
-   timeLeft = 120; // start the countdown at 120 seconds
+   if (timetoPlay.value < 120)
+      timeLeft = 120; // start the countdown at 120 seconds
+   else
+      timeLeft = timetoPlay.value; // start the countdown at 120 seconds
+   
    timerCount = 0; // the timer has fired 0 times so far
    shotOnScreen = false; // the shot is not on the screen
    enemyShots = []; // the enemy has not fired any shots
@@ -187,7 +194,7 @@ function newGame() {
    score = 0; // set the score to zero
    maxTimesVelocity = 4; // maximum number of times velocity can be increased
    heroShotVelocity = shot.speed; // set initial velocity
-   enemyShotVelocity = shot.speed; // set initial velocity
+   enemyShotVelocity = parseInt($('input[name="drone"]:checked').val()); // set initial velocity
    heroVelocity = hero.speed; // set initial velocity
    // Handle keyboard controls
    keysDown = {};
@@ -309,7 +316,7 @@ function updatePositions() {
 
          heroShotVelocity += velocityIncrement;
          enemyShotVelocity += velocityIncrement;
-         heroVelocity += velocityIncrement;
+         // heroVelocity += velocityIncrement;
          maxTimesVelocity--;
       } // end if
    }
@@ -364,6 +371,10 @@ function shootingEnemy() {
 
 // fires a shot
 function fireShot(event) {
+   if (event.code != keyboardTextBox.value) // if the spacebar was pressed
+      return; // do nothing
+
+   event.preventDefault();
 
    if (shotOnScreen) // if a shot is already on the screen
       return; // do nothing
@@ -427,7 +438,8 @@ window.addEventListener("load", setupGame, false);
 
 function addkey(e) {
    keysDown[e.keyCode] = true;
-   e.preventDefault();
+   if (e.code != keyboardTextBox.value)
+      e.preventDefault();
 }
 
 function removekey(e) {
