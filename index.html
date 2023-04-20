@@ -240,16 +240,22 @@
             <h1>Configuration</h1>
             <table>
                 <tr>
-                    <td>Shooting Keyboard:</td>
+                    <td>
+                        <label for="keyboard">Shooting Keyboard:</label>
+                    </td>
                     <td><input type="text" id="keyboard" value="Space" onclick="onListen()" onfocusout="offListen()"
                             readonly="readonly"></td>
                 </tr>
                 <tr>
-                    <td>Time in Seconds:</td>
+                    <td>
+                        <label for="time">Time in Seconds:</label>
+                    </td>
                     <td><input type="number" id="timetoPlay" min="120" value="120"></td>
                 </tr>
                 <tr>
-                    <td>choose enemys speed:</td>
+                    <td>
+                        <label for="speed">choose enemys speed:</label>
+                    </td>
                     <td>
                         <fieldset>
                             <div>
@@ -269,8 +275,28 @@
                         </fieldset>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <label for="volume">Sound:</label>
+                    </td>
+                    <td>
+                        <input id="sound" type="range" min="0" max="1" step="0.01" oninput="rangeValue.innerText = parseInt(this.value * 100)" />
+                        <label id="rangeValue">50</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="shotsNumber">Number of Shots:</label>
+                    </td>
+                    <td>
+                        <input id="numberOfShots" type="range" min="1" max="3" step="1" oninput="rangeShotsValue.innerText = this.value " />
+                        <label id="rangeShotsValue">2</label>
+                    </td>
+                </tr>
             </table>
-            <input onclick="switchScreen('game')" id="startButton" type="button" value="Start Game">
+            <button class="reg" onclick="switchScreen('game')" id="startButton">
+                Start Game
+            </button>
         </div>
         <div id="game">
             <canvas id="theCanvas"></canvas>
@@ -324,6 +350,8 @@
         var results = [];
         var keyboardTextBox = document.getElementById('keyboard');
         var timetoPlay = document.getElementById('timetoPlay');
+        var soundObject = document.getElementById('sound');
+        var numberOfShotsObject = document.getElementById('numberOfShots');
         users.push({ user_name: "p", user_password: "testuser", first_name: "testuser", last_name: "p", email: "p@gmail.com", birthday: "1999-01-01" });
         const logInButton = document.getElementById('logInSubmit');
         const logInFormObj = document.getElementById('logInForm');
