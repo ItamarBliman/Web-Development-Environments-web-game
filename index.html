@@ -254,24 +254,15 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="speed">choose enemys speed:</label>
+                        <label for="speed">Choose enemys speed:</label>
                     </td>
                     <td>
                         <fieldset>
-                            <div>
-                                <input type="radio" id="easy" name="drone" value=180>
-                                <label for="huey">Easy</label>
-                            </div>
+                                <label for="huey" style="display: inline-block;"><input type="radio" id="easy" name="drone" value=180 style="display: block;margin: 0 auto;">Easy</label>
 
-                            <div>
-                                <input type="radio" id="medium" name="drone" value=250 checked>
-                                <label for="dewey">Medium</label>
-                            </div>
+                                <label for="dewey" style="display: inline-block;"><input type="radio" id="medium" name="drone" value=250 style="display: block;margin: 0 auto;" checked>Medium</label>
 
-                            <div>
-                                <input type="radio" id="hard" name="drone" value=350>
-                                <label for="louie">Hard</label>
-                            </div>
+                                <label for="louie" style="display: inline-block;"><input type="radio" id="hard" name="drone" value=350 style="display: block;margin: 0 auto;">Hard</label>
                         </fieldset>
                     </td>
                 </tr>
@@ -291,6 +282,20 @@
                     <td>
                         <input id="numberOfShots" type="range" min="1" max="3" step="1" oninput="rangeShotsValue.innerText = this.value " />
                         <label id="rangeShotsValue">2</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="heroImage">Choose player:</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                                <label for="hero0" style="display: inline-block;"><input type="radio" id="hero0" name="heroPlayer" value="Images/hero0.png" style="display: block;margin: 0 auto;"><img src="Images/hero0.png" width=50 height=80></label>
+
+                                <label for="hero1" style="display: inline-block;"><input type="radio" id="hero1" name="heroPlayer" value="Images/hero1.png" style="display: block;margin: 0 auto;" checked><img src="Images/hero1.png" width=50 height=80></label>
+
+                                <label for="hero2" style="display: inline-block;"><input type="radio" id="hero2" name="heroPlayer" value="Images/hero2.png" style="display: block;margin: 0 auto;"><img src="Images/hero2.png" width=50 height=80></label>
+                        </fieldset>
                     </td>
                 </tr>
             </table>

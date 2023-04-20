@@ -83,7 +83,6 @@ function setupGame() {
 
    // Hero image
    heroImage = new Image();
-   heroImage.src = "images/hero.png";
 
    // Enemy image
    enemys = [];
@@ -195,6 +194,7 @@ function newGame() {
    maxTimesVelocity = 4; // maximum number of times velocity can be increased
    heroShotVelocity = defaultSpeed; // set initial velocity
    enemyShotVelocity = parseInt($('input[name="drone"]:checked').val()); // set initial velocity
+   heroImage.src = $('input[name="heroPlayer"]:checked').val();
    heroVelocity = hero.speed; // set initial velocity
    themeSound.volume = soundObject.value; // set the volume of the theme music
    targetSound.volume = soundObject.value;

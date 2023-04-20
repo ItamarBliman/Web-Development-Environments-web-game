@@ -117,7 +117,6 @@ function saveInfo(bv) {
     var email = bv.getFieldElements('email').val();
     var birthday = bv.getFieldElements('birthday').val();
     users.push({ user_name: user, user_password: pass, first_name: firstName, last_name: lastName, email: email, birthday: birthday });
-    alert("Sign up successfully! " + users[users.length - 1].user_name);
     switchScreen("login");
 }
 
