@@ -206,6 +206,7 @@ function newGame() {
 
    startTimer(); // starts the game loop
    themeSound.play(); // play the theme music
+   themeSound.loop = true; // loop the theme music
 } // end function newGame
 
 // called every TIME_INTERVAL milliseconds
@@ -337,8 +338,6 @@ function updatePositions() {
          gameOver("you can do better, you only got " + score + " points");
       else
          gameOver("Winner!!");
-
-      gameOver("You lost"); // show the losing dialog
    } // end if
 } // end function updatePositions
 
