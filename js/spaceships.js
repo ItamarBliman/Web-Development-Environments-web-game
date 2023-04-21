@@ -354,7 +354,7 @@ function updatePositions() {
 } // end function updatePositions
 
 function shootingEnemy() {
-   if ((enemyShots.length >= 2) || (enemyShots.length == 1 && enemyShots[0].y < canvasHeight * 3 / 4))
+   if ((enemyShots.length >= 2) || (enemyShots.length == 1 && enemyShots[0].y < canvasHeight * 6 / 8))
       return;
    let oneShot = new Object();
    let randomRow = Math.floor(Math.random() * (TARGET_ROWS - 1));
