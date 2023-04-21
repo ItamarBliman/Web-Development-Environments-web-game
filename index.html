@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!-- Spaceships Game HTML5 document. -->
+<!-- Game of Dragons HTML5 document. -->
 <html>
 
 <head>
@@ -8,7 +8,6 @@
     <title>Games of Dragons</title>
 
     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> -->
     <link rel="stylesheet" type="text/css"
         href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css">
 
@@ -63,6 +62,8 @@
             <br>
             <button class="log" onclick="switchScreen('login')">Login</button>
             <button class="reg" onclick="switchScreen('signUp')">Sign up</button>
+            <br>
+            <br>
             <p>Made with <span>❤</span> by<br>
                 Daniel Samira - 316164417<br>
                 Itamar Bliman - 312235765
@@ -72,7 +73,6 @@
             <br>
             <h1>Sign Up</h1>
             <div class="signUpcontainer">
-
                 <form class="well form-horizontal" id="contact_form"
                     style="background-color: #202020a8;width: 60%;margin: auto;">
                     <fieldset>
@@ -160,24 +160,11 @@
                             <div class="col-md-4 selectContainer">
                                 <div class="input-group" style="text-align: left;">
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                    <!-- <select name="department" class="form-control selectpicker">
-                                        <option value="">Select your Department/Office</option>
-                                        <option>Department of Engineering</option>
-                                        <option>Department of Agriculture</option>
-                                        <option>Accounting Office</option>
-                                        <option>Tresurer's Office</option>
-                                        <option>MPDC</option>
-                                        <option>MCTC</option>
-                                        <option>MCR</option>
-                                        <option>Mayor's Office</option>
-                                        <option>Tourism Office</option> -->
                                     <input type="date" id="birthday" name="birthday">
                                     </select>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Select Basic -->
 
                         <!-- Success message -->
                         <div class="alert alert-success" role="alert" id="success_message">Success <i
@@ -221,10 +208,8 @@
                         <input name="passWord" type="password" placeholder="Password">
                         <span class="check-message hidden">Required</span>
                     </div>
-
                     <br>
                     <span id="error-message hidden" style="color: red;"></span>
-
                     <button id="logInSubmit" type="submit" class="login-btn" disabled>
                         Log In Now
                     </button>
@@ -328,7 +313,7 @@
         <span style="float: right;">&copy Daniel and Itamar&nbsp</span>
     </footer>
 
-    <!-- Dialog with Background: Begin -->
+    <!-- Dialogs -->
     <dialog class="bcgrnd animate" id="aboutDialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -338,13 +323,25 @@
             <div class="modal-body">
                 <form method="dialog">
                     <br />
+                    <label style="font-size: 28px;"> Daniel Samira & Itamar Bliman<br /></label>
+                    <label style="font-size: 28px;text-align: left;line-height: 1.75;">
+                        Games of Dragons extra functionalities:<br />
+                        - The player can choose the time limit for the game, with a minimum of 120 seconds.<br />
+                        - The player can choose the game difficulty (easy, medium or hard) and the enemy dragons will
+                        move faster as the level is more difficult. <br />
+                        - The player can choose the volume of the game sounds.<br />
+                        - The player can choose the maximum number of shots their character can shoot
+                        simultaneously.<br />
+                        - The player can choose the character they want to use as the main character.<br />
+                        - At any time the player can change the configurations and starting a new game.<br /></label>
+                    <br />
+                    <br />
                     <button class="log" onClick="closeDialog()">Close</button>
                 </form>
             </div>
         </div>
     </dialog>
 
-    <!-- Dialog with Background: Begin -->
     <dialog class="bcgrnd animate" id="gameOverDialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -389,10 +386,7 @@
         }
 
         function keyboardToText(e) {
-            // var name = event.key;
-            // var code = event.code;
             keyboard.value = e.code;
-            // e.preventDefault();
             return false;
         }
 
@@ -423,6 +417,12 @@
         const gameOverDialogObject = document.getElementById('gameOverDialog');
         const tableResultsObject = document.getElementById('tableResults');
 
+        function onClick(event) {
+            if (event.target === favDialogObject) {
+                favDialogObject.close();
+            }
+        }
+        favDialogObject.addEventListener("click", onClick);
 
         // "Show the dialog" button opens the <dialog> modally
         showButton.addEventListener('click', () => {
@@ -473,6 +473,11 @@
     <audio id="themeSound" preload="auto">
         <source src="sounds/themeSound.mp3" type="audio/mp3">
     </audio>
+    <audio id="victorySound" preload="auto">
+        <source src="sounds/victorySound.mp3" type="audio/mp3">
+    </audio>
+    <audio id="defeatSound" preload="auto">
+        <source src="sounds/defeatSound.mp3" type="audio/mp3">
 </body>
 
 </html>

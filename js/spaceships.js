@@ -3,14 +3,14 @@ var canvas; // the canvas
 var context; // used for drawing on the canvas
 
 // constants for game play
-var TARGET_ROWS = 4; // sections in the target
-var TARGET_COLUMNS = 5; // sections in the target
-var TARGET_PIECES = TARGET_ROWS * TARGET_COLUMNS; // sections in the target
+var TARGET_ROWS = 4; // number of rows in the target
+var TARGET_COLUMNS = 5; // number of columns in the target
+var TARGET_PIECES = TARGET_ROWS * TARGET_COLUMNS; // total number of target pieces
 var TIME_INTERVAL = 25; // screen refresh interval in milliseconds
-var interval = TIME_INTERVAL / 1000.0;
+var interval = TIME_INTERVAL / 1000.0; // screen refresh interval in seconds
 var Strikes; // number of strikes
 var points = 5; // number of points
-var score; // number of points
+var score; // score
 
 // variables for the game loop and tracking statistics
 var intervalTimer; // holds interval timer
@@ -48,6 +48,8 @@ var targetSound;
 var shotSound;
 var heroSound;
 var themeSound;
+var victorySound;
+var defeatSound;
 
 var keysDown; // Handle keyboard controls
 var bgImage;
@@ -113,6 +115,8 @@ function setupGame() {
    heroSound = document.getElementById("heroSound");
    shotSound = document.getElementById("shotSound");
    themeSound = document.getElementById("themeSound");
+   victorySound = document.getElementById("victorySound");
+   defeatSound = document.getElementById("defeatSound");
 } // end function setupGame
 
 // set up interval timer to update game
@@ -200,6 +204,8 @@ function newGame() {
    targetSound.volume = soundObject.value;
    shotSound.volume = soundObject.value;
    heroSound.volume = soundObject.value;
+   victorySound.volume = soundObject.value;
+   defeatSound.volume = soundObject.value;
 
    // Handle keyboard controls
    keysDown = {};
@@ -272,6 +278,7 @@ function updatePositions() {
                // if all pieces have been hit
                if (++targetPiecesHit == TARGET_PIECES) {
                   draw(); // draw the game pieces one final time
+                  victorySound.play(); // play the victory sound
                   gameOver("Champion!");
                } // end if
             } // end if
@@ -296,6 +303,7 @@ function updatePositions() {
             targetSound.play(); // play target hit sound
             Strikes--;
             if (Strikes == 0) {
+               defeatSound.play(); // play the defeat sound
                gameOver("You Lost!");
             }
             hero.x = canvasWidth / 2;
@@ -334,17 +342,21 @@ function updatePositions() {
 
    // if the timer reached zero
    if (timeLeft <= 0) {
-      if (score < 100)
+      if (score < 100) {
+         defeatSound.play(); // play the defeat sound
          gameOver("you can do better, you only got " + score + " points");
-      else
+      }
+      else {
+         victorySound.play(); // play the victory sound
          gameOver("Winner!!");
+      }
    } // end if
 } // end function updatePositions
 
 function shootingEnemy() {
-   let oneShot = new Object();
    if ((enemyShots.length >= 2) || (enemyShots.length == 1 && enemyShots[0].y < canvasHeight * 3 / 4))
       return;
+   let oneShot = new Object();
    let randomRow = Math.floor(Math.random() * (TARGET_ROWS - 1));
    let randomCol = Math.floor(Math.random() * (TARGET_COLUMNS - 1));
    for (let i = randomRow; i < TARGET_ROWS && !oneShot.x; i++) {
