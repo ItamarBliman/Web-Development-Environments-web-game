@@ -5,11 +5,12 @@ This is a repository for assignment 2 of the Web development environments course
 ## The Author
 
 Daniel Samira - ID 316164417
+
 Itamar Bliman - ID 312235765
 
 ## Assignment Description
 
-In this assignment, we had to build a spaceship game, we chose to build our game in a Game of Thrones theme, and called it Games of Dragons.
+In this assignment, we had to build a spaceships game, we chose to build our game in a Game of Thrones theme, and called it Games of Dragons.
 Enjoy!
 
 ## [Link to the website](https://web-development-environments-2023.github.io/assignment2-316164417_312235765/)
