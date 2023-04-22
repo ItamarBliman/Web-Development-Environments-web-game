@@ -16,6 +16,8 @@
     <link href="//db.onlinewebfonts.com/c/97c4b25dc74e0ab045154e75a8fdd69d?family=Game+of+Thrones" rel="stylesheet"
         type="text/css" />
 
+    <link rel="icon" type="image/x-icon" href="/images/enemy1.png">
+
     <script src="js/spaceships.js" type="text/javascript"></script>
     <script src="js/jquery.js" type="text/javascript"></script>
     <script src="js/signUp.js" type="text/javascript"></script>
@@ -49,15 +51,7 @@
     </menu>
     <content>
         <div id="welcome" class="welcome">
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <h1>Welcome</h1>
+            <h1 style="margin-top: 7%;">Welcome</h1>
             <img src="images/logo.png" width="25%" height="25%">
             <br>
             <button class="log" onclick="switchScreen('login')">Log In</button>
@@ -73,7 +67,7 @@
             <br>
             <h1>Sign Up</h1>
             <div class="signUpcontainer">
-                <form class="well form-horizontal" id="contact_form"
+                <form class="well form-horizontal" method="post" id="contact_form"
                     style="background-color: #202020a8;width: 60%;margin: auto;">
                     <fieldset>
 
@@ -173,7 +167,7 @@
                         <!-- Button -->
                         <div class="form-group">
                             <label class="col-md-4 control-label"></label>
-                            <div class="col-md-4"><br>
+                            <div class="col-md-4">
                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 <button type="submit" id="signUpSubmit"
                                     class="btn btn-warning">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSUBMIT
@@ -189,14 +183,7 @@
         </div><!-- /.container -->
         </div>
         <div id="login">
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <h1>Log In</h1>
+            <h1 style="margin-top: 7%;">Log In</h1>
             <div class="login-form">
                 <form id="logInForm">
                     <div class="textbox">
@@ -208,7 +195,6 @@
                         <input name="passWord" type="password" placeholder="Password">
                         <span class="check-message hidden">Required</span>
                     </div>
-                    <br>
                     <span id="error-message hidden" style="color: red;"></span>
                     <button id="logInSubmit" type="submit" class="login-btn" disabled>
                         Log In Now
@@ -217,7 +203,7 @@
 
                 <div class="dont-have-account">
                     Don't have a Games of Dragons account yet?
-                    <a onclick="switchScreen('signUp')">Sign Up</a>
+                    <a onclick="switchScreen('signUp')" style="cursor: pointer;">Sign Up</a>
                 </div>
             </div>
         </div>
@@ -411,6 +397,7 @@
             stopTimer();
             if (p === 'game')
                 newGame();
+            document.getElementById("error-message hidden").innerHTML = "";
         }
 
         const showButton = document.getElementById('showDialog');

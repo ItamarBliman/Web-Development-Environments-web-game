@@ -64,10 +64,8 @@ h2 {
 	text-transform: uppercase;
 	color: #f8d7c5;
 	text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
-
-	/* -webkit-background-clip: text; */
 	-webkit-text-fill-color: transparent;
-	margin-bottom: 50px;
+	margin-bottom: 2%;
 	animation: neon 2.0s ease-in-out infinite alternate;
 	-webkit-text-stroke-width: 1px;
 	-webkit-text-stroke-color: #f8d7c5;

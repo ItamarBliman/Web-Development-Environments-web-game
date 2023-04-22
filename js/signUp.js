@@ -11,13 +11,8 @@ $(document).ready(function () {
             $('#contact_form').data('bootstrapValidator').resetForm();
 
             var bv = form.data('bootstrapValidator');
-            document.getElementById("contact_form").reset();
-
             saveInfo(bv);
-            // Use Ajax to submit form data
-            $.post(form.attr('action'), form.serialize(), function (result) {
-                console.log(result);
-            }, 'json');
+            document.getElementById("contact_form").reset();
         },
         fields: {
             user_name: {
