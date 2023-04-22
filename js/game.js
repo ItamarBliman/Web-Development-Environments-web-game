@@ -32,6 +32,8 @@ var maxTimesVelocity; // maximum number of times to increase velocity
 var velocityIncrement = 40; // amount to increase velocity each time
 var heroHeight; // hero height
 var heroWidth; // hero width
+var shotHeight; // shot height
+var shotWidth; // shot height
 
 var hitStates; // is each target piece hit?
 var targetPiecesHit; // number of target pieces hit (out of 20)
@@ -77,6 +79,7 @@ function setupGame() {
    target = new Object(); // object representing target line
    target.start = new Object(); // will hold x-y coords of line start
    target.end = new Object(); // will hold x-y coords of line end
+   hero = new Object(); // object representing hero
 
    // Hero image
    heroImage = new Image();
@@ -95,10 +98,6 @@ function setupGame() {
    // Enemy Shot image
    enemyShotImage = new Image();
    enemyShotImage.src = "images/enemyshot.png";
-
-   // Game objects
-   hero = { speed: defaultSpeed }; // movement in pixels per second
-   target.speed = defaultSpeed; // movement in pixels per second
 
    // initialize hitStates as an array
    hitStates = new Array(TARGET_ROWS);
@@ -129,8 +128,10 @@ function stopTimer() {
    // canvas.removeEventListener("keypress", fireShot, false);
    removeEventListener("keypress", fireShot, false);
    window.clearInterval(intervalTimer);
-   themeSound.pause();
-   themeSound.currentTime = 0;
+   if (!themeSound.paused) {
+      themeSound.pause();
+      themeSound.currentTime = 0;
+   }
    removeEventListener("keydown", addkey, false);
    removeEventListener("keyup", removekey, false);
 
@@ -139,8 +140,9 @@ function stopTimer() {
 // called by function newGame to scale the size of the game elements
 // relative to the size of the canvas before the game begins
 function resetElements() {
-   shotImageRadius = 32 // shotImage.height / 2;
    shotSpeed = canvas.width * 3 / 2;
+   shotWidth = canvas.width * 1 / 34;
+   shotHeight = canvas.height * 1 / 12;
 
    // configure instance variables related to the target
    targetBeginningX = canvas.width * 3 / 10; // target 7/8 canvas width from left
@@ -192,7 +194,7 @@ function newGame() {
    heroShotVelocity = defaultSpeed; // set initial velocity
    enemyShotVelocity = parseInt($('input[name="drone"]:checked').val()); // set initial velocity
    heroImage.src = $('input[name="heroPlayer"]:checked').val();
-   heroVelocity = hero.speed; // set initial velocity
+   heroVelocity = defaultSpeed; // set initial velocity
    themeSound.volume = soundObject.value; // set the volume of the theme music
    targetSound.volume = soundObject.value;
    shotSound.volume = soundObject.value;
@@ -214,6 +216,8 @@ function updatePositions() {
    heroHeight = canvas.height / 8;
    pieceLength = (canvas.height * 4 / 9) / TARGET_ROWS;
    pieceWidth = (canvas.width * 0.5) / TARGET_COLUMNS;
+   shotWidth = canvas.width * 1 / 34;
+   shotHeight = canvas.height * 1 / 12;
 
    if ((38 in keysDown)) { // Player holding up
       if (hero.y > canvas.height * 0.6)
@@ -251,10 +255,10 @@ function updatePositions() {
 
          // check for shot collision with target
          if (heroShotVelocity > 0 &&
-            shotsOfHero[i].y + shotImageRadius >= target.start.y &&
-            shotsOfHero[i].y - shotImageRadius <= target.end.y &&
-            shotsOfHero[i].x + shotImageRadius >= target.start.x &&
-            shotsOfHero[i].x - shotImageRadius <= target.end.x) {
+            shotsOfHero[i].y + shotHeight >= target.start.y &&
+            shotsOfHero[i].y - shotHeight <= target.end.y &&
+            shotsOfHero[i].x + shotWidth >= target.start.x &&
+            shotsOfHero[i].x - shotWidth <= target.end.x) {
             // determine target section number (0 is the top)
             var sectionX =
                Math.floor((shotsOfHero[i].x - target.start.x) / pieceWidth);
@@ -293,9 +297,8 @@ function updatePositions() {
 
          // check for enemy shot collision witßh hero
          if (
-
-            Math.abs(enemyShots[i].y - hero.y) <= shotImageRadius &&
-            Math.abs(enemyShots[i].x - hero.x) <= shotImageRadius) {
+            Math.abs(enemyShots[i].y - hero.y) <= shotHeight &&
+            Math.abs(enemyShots[i].x - hero.x) <= shotWidth) {
 
             targetSound.play(); // play target hit sound
             Strikes--;
@@ -304,7 +307,7 @@ function updatePositions() {
                gameOver("You Lost!");
             }
             hero.x = canvas.width / 2;
-            hero.y = canvas.height - heroHeight;
+            hero.y = canvas.height - heroHeight * 1.1;
             enemyShots = [];
             // shotOnScreen = false;
             shotsOfHero = [];
@@ -351,7 +354,7 @@ function updatePositions() {
 } // end function updatePositions
 
 function shootingEnemy() {
-   if ((enemyShots.length >= 2) || (enemyShots.length == 1 && enemyShots[0].y < canvas.height * 6 / 8))
+   if ((enemyShots.length >= 2) || (enemyShots.length == 1 && enemyShots[0].y + shotHeight < canvas.height * 3 / 4))
       return;
    let oneShot = new Object();
    let randomRow = Math.floor(Math.random() * (TARGET_ROWS - 1));
@@ -404,7 +407,7 @@ function fireShot(event) {
 function draw() {
    canvas.width = canvas.width; // clears the canvas (from W3C docs)
    let text = "Time remaining: " + timeLeft + " sec     Strikes remaining: " + Strikes + "     Score: " + score;
-   context.font = 'bold 40px calibri';
+   context.font = `bold ${canvas.width * 0.2}% calibri`;
 
    // Create a gradient for the text
    const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
@@ -429,12 +432,12 @@ function draw() {
 
    // if a shot is currently on the screen, draw it
    for (let i = 0; i < shotsOfHero.length; i++) {
-      context.drawImage(shotImage, shotsOfHero[i].x, shotsOfHero[i].y); // draw the shot
+      context.drawImage(shotImage, shotsOfHero[i].x, shotsOfHero[i].y, shotWidth, shotHeight); // draw the shot
    }
 
    // draw the enemy shots
    for (let i = 0; i < enemyShots.length; i++) {
-      context.drawImage(enemyShotImage, enemyShots[i].x, enemyShots[i].y);
+      context.drawImage(enemyShotImage, enemyShots[i].x, enemyShots[i].y, shotWidth, shotHeight); // draw the shot
    }
 
    context.drawImage(heroImage, hero.x, hero.y, heroWidth, heroHeight); // draw the hero

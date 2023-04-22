@@ -18,7 +18,7 @@
 
     <link rel="icon" type="image/x-icon" href="/images/enemy1.png">
 
-    <script src="js/spaceships.js" type="text/javascript"></script>
+    <script src="js/game.js" type="text/javascript"></script>
     <script src="js/jquery.js" type="text/javascript"></script>
     <script src="js/signUp.js" type="text/javascript"></script>
 
@@ -445,8 +445,30 @@
         });
         canvas = document.getElementById("theCanvas");
         addEventListener("resize", (event) => {
-            canvas.width = window.innerWidth - 20;
-            canvas.height = window.innerHeight - 80;
+            let newWidth = window.innerWidth - 20;
+            let newHeight = window.innerHeight - 80;
+            let intervalX = newWidth / canvas.width;
+            let intervalY = newHeight / canvas.height;
+
+            if (!themeSound.paused) {
+                hero.x = hero.x * intervalX;
+                hero.y = hero.y * intervalY;
+                target.start.x = target.start.x * intervalX;
+                target.start.y = target.start.y * intervalY;
+                target.end.x = target.end.x * intervalX;
+                target.end.y = target.end.y * intervalY;
+                for (let i = 0; i < shotsOfHero.length; i++) {
+                    shotsOfHero[i].x = shotsOfHero[i].x * intervalX;
+                    shotsOfHero[i].y = shotsOfHero[i].y * intervalY;
+                }
+                for (let i = 0; i < enemyShots.length; i++) {
+                    enemyShots[i].x = enemyShots[i].x * intervalX;
+                    enemyShots[i].y = enemyShots[i].y * intervalY;
+                }
+            }
+
+            canvas.width = newWidth;
+            canvas.height = newHeight;
         });
 
         canvas.width = window.innerWidth - 20;
