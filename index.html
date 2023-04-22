@@ -444,6 +444,11 @@
             }
         });
         canvas = document.getElementById("theCanvas");
+        addEventListener("resize", (event) => {
+            canvas.width = window.innerWidth - 20;
+            canvas.height = window.innerHeight - 80;
+        });
+
         canvas.width = window.innerWidth - 20;
         canvas.height = window.innerHeight - 80;
 
