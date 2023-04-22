@@ -45,7 +45,6 @@ var shotsOfHero; // is the cannonball on the screen
 
 // variables for sounds
 var targetSound;
-var shotSound;
 var heroSound;
 var themeSound;
 var victorySound;
@@ -107,7 +106,6 @@ function setupGame() {
    // get sounds
    targetSound = document.getElementById("targetSound");
    heroSound = document.getElementById("heroSound");
-   shotSound = document.getElementById("shotSound");
    themeSound = document.getElementById("themeSound");
    victorySound = document.getElementById("victorySound");
    defeatSound = document.getElementById("defeatSound");
@@ -197,7 +195,6 @@ function newGame() {
    heroVelocity = defaultSpeed; // set initial velocity
    themeSound.volume = soundObject.value; // set the volume of the theme music
    targetSound.volume = soundObject.value;
-   shotSound.volume = soundObject.value;
    heroSound.volume = soundObject.value;
    victorySound.volume = soundObject.value;
    defeatSound.volume = soundObject.value;
@@ -397,9 +394,6 @@ function fireShot(event) {
    let newShot = { x: hero.x, y: hero.y };
 
    shotsOfHero.push(newShot);
-
-   // play shot fired sound
-   shotSound.play();
 } // end function fireShot
 
 
