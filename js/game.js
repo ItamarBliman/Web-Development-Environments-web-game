@@ -126,7 +126,7 @@ function stopTimer() {
    // canvas.removeEventListener("keypress", fireShot, false);
    removeEventListener("keypress", fireShot, false);
    window.clearInterval(intervalTimer);
-   if (!themeSound.paused) {
+   if (!themeSound?.paused) {
       themeSound.pause();
       themeSound.currentTime = 0;
    }
