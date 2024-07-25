@@ -2,12 +2,6 @@
 
 This is a repository for assignment 2 of the Web development environments course at the [Ben-Gurion University](https://in.bgu.ac.il/), Israel.
 
-## The Author
-
-Daniel Samira - ID 316164417
-
-Itamar Bliman - ID 312235765
-
 ## Assignment Description
 
 In this assignment, we had to build a spaceships game, we chose to build our game in a Game of Thrones theme, and called it Games of Dragons.
